@@ -19,7 +19,7 @@ describe('Twig Shiki rendering', () => {
   it('falls back to the default theme for unsupported theme names', async () => {
     await expect(getTwigHighlighter('not-a-theme')).resolves.toMatchObject({
       language: 'twig',
-      theme: 'github-dark',
+      theme: 'github-light',
     });
   });
 

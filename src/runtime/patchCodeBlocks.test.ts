@@ -22,27 +22,31 @@ describe('installTwigCodeBlockPatch', () => {
 
     const cleanup = installTwigCodeBlockPatch({ patchDocsCodeBlocks: false });
 
-    expect(document.querySelector('[data-storybook-addon-twig-replacement]')).toBeNull();
+    expect(document.querySelector('pre')?.hasAttribute('data-storybook-addon-twig-patched')).toBe(false);
     cleanup();
   });
 
-  it('patches Twig code blocks and restores the DOM on cleanup', async () => {
-    document.body.innerHTML = '<pre><code class="language-html.twig">{{ label }}</code></pre>';
+  it('patches Twig code blocks in place and restores the DOM on cleanup', async () => {
+    document.body.innerHTML =
+      '<pre class="prismjs" style="color: red"><code class="language-html.twig">{{ label }}</code></pre>';
 
     const cleanup = installTwigCodeBlockPatch({ patchDocsCodeBlocks: true });
 
     await vi.waitFor(() => {
-      expect(document.querySelector('[data-storybook-addon-twig-replacement]')).not.toBeNull();
+      expect(document.querySelector('pre')?.classList.contains('satw-code')).toBe(true);
     });
 
     expect(document.querySelector('pre')?.getAttribute('data-storybook-addon-twig-patched')).toBe('true');
-    expect((document.querySelector('pre') as HTMLElement).style.display).toBe('none');
+    expect(document.querySelectorAll('pre')).toHaveLength(1);
+    expect((document.querySelector('pre') as HTMLElement).style.background).toBe('transparent');
+    expect(document.querySelector('pre')?.innerHTML).toContain('<code>{{ label }}</code>');
 
     cleanup();
 
-    expect(document.querySelector('[data-storybook-addon-twig-replacement]')).toBeNull();
     expect(document.querySelector('pre')?.hasAttribute('data-storybook-addon-twig-patched')).toBe(false);
-    expect((document.querySelector('pre') as HTMLElement).style.display).toBe('');
+    expect(document.querySelector('pre')?.className).toBe('prismjs');
+    expect(document.querySelector('pre')?.getAttribute('style')).toBe('color: red');
+    expect(document.querySelector('code')?.className).toBe('language-html.twig');
   });
 
   it('does not patch an already patched pre element twice', async () => {
@@ -51,7 +55,7 @@ describe('installTwigCodeBlockPatch', () => {
 
     const cleanup = installTwigCodeBlockPatch({ patchDocsCodeBlocks: true });
 
-    expect(document.querySelector('[data-storybook-addon-twig-replacement]')).toBeNull();
+    expect(renderTwigToHtmlMock).not.toHaveBeenCalled();
     cleanup();
   });
 
@@ -61,7 +65,7 @@ describe('installTwigCodeBlockPatch', () => {
     const cleanup = installTwigCodeBlockPatch({ patchDocsCodeBlocks: true });
 
     await vi.waitFor(() => {
-      expect(document.querySelector('[data-storybook-addon-twig-replacement]')).not.toBeNull();
+      expect(document.querySelector('pre')?.classList.contains('satw-code')).toBe(true);
     });
 
     cleanup();
@@ -73,17 +77,28 @@ describe('installTwigCodeBlockPatch', () => {
     const cleanup = installTwigCodeBlockPatch({ patchDocsCodeBlocks: true });
 
     await vi.waitFor(() => {
-      expect(document.querySelectorAll('[data-storybook-addon-twig-replacement]')).toHaveLength(1);
+      expect(document.querySelectorAll('[data-storybook-addon-twig-patched]')).toHaveLength(1);
     });
 
     expect(document.querySelectorAll('[data-storybook-addon-twig-patched]')).toHaveLength(1);
     cleanup();
   });
 
+  it('patches Twig code blocks added after initialization', async () => {
+    const cleanup = installTwigCodeBlockPatch({ patchDocsCodeBlocks: true });
+
+    document.body.innerHTML = '<pre><code class="language-twig">{{ late }}</code></pre>';
+
+    await vi.waitFor(() => {
+      expect(document.querySelector('pre')?.classList.contains('satw-code')).toBe(true);
+    });
+
+    cleanup();
+  });
+
   it('skips Storybook error and addon-rendered pre blocks', async () => {
     document.body.innerHTML = [
       '<pre class="sb-errordisplay_code">{% broken %}</pre>',
-      '<div data-storybook-addon-twig-replacement="true"><pre>{% already rendered %}</pre></div>',
       '<pre class="satw-code">{% already rendered %}</pre>',
       '<pre class="prismjs">{# real twig #}</pre>',
     ].join('');
@@ -97,7 +112,7 @@ describe('installTwigCodeBlockPatch', () => {
     cleanup();
   });
 
-  it('does not insert replacements after cleanup wins a pending render', async () => {
+  it('does not change the DOM after cleanup wins a pending render', async () => {
     let resolveRender: (html: string) => void = () => undefined;
     renderTwigToHtmlMock.mockReturnValueOnce(
       new Promise<string>((resolve) => {
@@ -114,8 +129,22 @@ describe('installTwigCodeBlockPatch', () => {
       expect(renderTwigToHtmlMock).toHaveBeenCalledTimes(1);
     });
 
-    expect(document.querySelector('[data-storybook-addon-twig-replacement]')).toBeNull();
     expect(document.querySelector('pre')?.hasAttribute('data-storybook-addon-twig-patched')).toBe(false);
     expect((document.querySelector('pre') as HTMLElement).style.display).toBe('');
+  });
+
+  it('recovers when the highlighter does not return a pre element', async () => {
+    renderTwigToHtmlMock.mockResolvedValueOnce('<code>{{ label }}</code>');
+    document.body.innerHTML = '<pre><code class="language-twig">{{ label }}</code></pre>';
+
+    const cleanup = installTwigCodeBlockPatch({ patchDocsCodeBlocks: true });
+
+    await vi.waitFor(() => {
+      expect(renderTwigToHtmlMock).toHaveBeenCalledTimes(1);
+    });
+
+    expect(document.querySelector('pre')?.hasAttribute('data-storybook-addon-twig-patched')).toBe(false);
+
+    cleanup();
   });
 });

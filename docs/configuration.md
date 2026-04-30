@@ -8,7 +8,7 @@ export default {
     {
       name: 'storybook-addon-twig',
       options: {
-        theme: 'github-dark',
+        theme: 'github-light',
         patchDocsCodeBlocks: true,
         copy: true,
         showLineNumbers: true,
@@ -31,7 +31,9 @@ export type TwigAddonOptions = {
 };
 ```
 
-Supported `theme` values are `github-dark`, `github-light`, `dark-plus`, and `light-plus`. Unknown theme names fall back to `github-dark` instead of failing the panel or docs rendering path.
+Supported `theme` values are `github-light`, `github-dark`, `light-plus`, and `dark-plus`. Unknown theme names fall back to `github-light` instead of failing the panel or docs rendering path.
+
+Code backgrounds are transparent. Storybook remains responsible for the Source block container, border, spacing, and surrounding background.
 
 ## Story parameters
 

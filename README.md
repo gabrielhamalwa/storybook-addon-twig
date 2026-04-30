@@ -31,7 +31,7 @@ const config: StorybookConfig = {
         copy: true,
         patchDocsCodeBlocks: true,
         showLineNumbers: true,
-        theme: 'github-dark',
+        theme: 'github-light',
       },
     },
   ],
@@ -58,16 +58,16 @@ export const Default = {
 
 ## Options
 
-| Option                | Default       | Purpose                                                                              |
-| --------------------- | ------------- | ------------------------------------------------------------------------------------ |
-| `theme`               | `github-dark` | Supported bundled theme: `github-dark`, `github-light`, `dark-plus`, or `light-plus` |
-| `patchDocsCodeBlocks` | `true`        | Re-highlight rendered Storybook `twig` docs/source blocks                            |
-| `panel`               | `true`        | Register the dedicated `Twig` addon panel                                            |
-| `copy`                | `true`        | Show copy controls in the Twig panel                                                 |
-| `showLineNumbers`     | `true`        | Show line numbers in addon-rendered code                                             |
-| `wrapLines`           | `true`        | Wrap long lines in addon-rendered code                                               |
+| Option                | Default        | Purpose                                                                              |
+| --------------------- | -------------- | ------------------------------------------------------------------------------------ |
+| `theme`               | `github-light` | Supported bundled theme: `github-light`, `github-dark`, `light-plus`, or `dark-plus` |
+| `patchDocsCodeBlocks` | `true`         | Re-highlight rendered Storybook `twig` docs/source blocks                            |
+| `panel`               | `true`         | Register the dedicated `Twig` addon panel                                            |
+| `copy`                | `true`         | Show copy controls in the Twig panel                                                 |
+| `showLineNumbers`     | `true`         | Show line numbers in addon-rendered code                                             |
+| `wrapLines`           | `true`         | Wrap long lines in addon-rendered code                                               |
 
-Unsupported theme names fall back to `github-dark` to keep addon rendering stable.
+The addon keeps code backgrounds transparent so Storybook controls the surrounding Source block styling. Unsupported theme names fall back to `github-light` to keep addon rendering stable.
 
 ## Development
 

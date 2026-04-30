@@ -52,7 +52,7 @@ describe('TwigCodeViewer', () => {
       expect.objectContaining({
         copy: true,
         showLineNumbers: true,
-        theme: 'github-dark',
+        theme: 'github-light',
         wrapLines: true,
       }),
     );

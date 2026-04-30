@@ -3,7 +3,14 @@ import { normalizeOptions } from '../options';
 import type { TwigAddonOptions } from '../types';
 
 const PATCHED_ATTRIBUTE = 'data-storybook-addon-twig-patched';
-const REPLACEMENT_ATTRIBUTE = 'data-storybook-addon-twig-replacement';
+
+type OriginalPreState = {
+  className: string;
+  html: string;
+  style: string | null;
+};
+
+const originalPreState = new WeakMap<HTMLElement, OriginalPreState>();
 
 export function installTwigCodeBlockPatch(options: TwigAddonOptions | undefined): () => void {
   const normalizedOptions = normalizeOptions(options);
@@ -27,9 +34,8 @@ export function installTwigCodeBlockPatch(options: TwigAddonOptions | undefined)
   return () => {
     disposed = true;
     observer.disconnect();
-    document.querySelectorAll(`[${REPLACEMENT_ATTRIBUTE}]`).forEach((node) => node.remove());
     document.querySelectorAll<HTMLElement>(`[${PATCHED_ATTRIBUTE}]`).forEach((node) => {
-      node.style.display = '';
+      restorePreNode(node);
       node.removeAttribute(PATCHED_ATTRIBUTE);
     });
   };
@@ -51,18 +57,14 @@ async function patchExistingCodeBlocks(
       try {
         const code = getVisiblePreText(pre);
         const html = await renderTwigToHtml(code, options);
-        const replacement = document.createElement('div');
-        replacement.setAttribute(REPLACEMENT_ATTRIBUTE, 'true');
-        replacement.className = 'satw-code-block';
-        replacement.innerHTML = html;
+        const renderedPre = getRenderedPreNode(html);
 
         if (isDisposed()) {
           pre.removeAttribute(PATCHED_ATTRIBUTE);
           return;
         }
 
-        pre.style.display = 'none';
-        pre.insertAdjacentElement('afterend', replacement);
+        patchPreNode(pre, renderedPre);
         /* v8 ignore start -- Defensive recovery if highlighting unexpectedly fails. */
       } catch {
         pre.removeAttribute(PATCHED_ATTRIBUTE);
@@ -102,7 +104,6 @@ function shouldPatchPreNode(pre: HTMLElement, code: string): boolean {
     pre.classList.contains('prismjs') &&
     !pre.classList.contains('sb-errordisplay_code') &&
     !pre.classList.contains('satw-code') &&
-    !pre.closest(`[${REPLACEMENT_ATTRIBUTE}]`) &&
     containsTwigSyntax(code)
   );
 }
@@ -113,4 +114,48 @@ function containsTwigSyntax(code: string): boolean {
 
 function getVisiblePreText(pre: HTMLElement): string {
   return pre.innerText || pre.textContent || '';
+}
+
+function getRenderedPreNode(html: string): HTMLPreElement {
+  const template = document.createElement('template');
+  template.innerHTML = html.trim();
+  const renderedPre = template.content.querySelector('pre');
+
+  if (!renderedPre) {
+    throw new Error('Twig highlighter did not render a pre element.');
+  }
+
+  return renderedPre;
+}
+
+function patchPreNode(pre: HTMLElement, renderedPre: HTMLPreElement): void {
+  originalPreState.set(pre, {
+    className: pre.className,
+    html: pre.innerHTML,
+    style: pre.getAttribute('style'),
+  });
+
+  renderedPre.classList.forEach((className) => pre.classList.add(className));
+  pre.classList.add('satw-code--docs');
+  pre.style.background = 'transparent';
+  pre.innerHTML = renderedPre.innerHTML;
+}
+
+function restorePreNode(pre: HTMLElement): void {
+  const original = originalPreState.get(pre);
+
+  if (!original) {
+    return;
+  }
+
+  pre.className = original.className;
+  pre.innerHTML = original.html;
+
+  if (original.style) {
+    pre.setAttribute('style', original.style);
+  } else {
+    pre.removeAttribute('style');
+  }
+
+  originalPreState.delete(pre);
 }

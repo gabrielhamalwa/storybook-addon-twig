@@ -17,7 +17,7 @@ Runtime patching is isolated in `src/runtime/patchCodeBlocks.ts` because it depe
 
 ## Highlighting
 
-Code rendering uses [Shiki](https://shiki.style/) with its bundled `twig` language and a small explicit theme set. Unsupported theme names fall back to `github-dark`.
+Code rendering uses [Shiki](https://shiki.style/) with its bundled `twig` language and a small explicit theme set. Unsupported theme names fall back to `github-light`.
 
 ## Source Text
 

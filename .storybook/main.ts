@@ -14,7 +14,7 @@ const config: StorybookConfig = {
         copy: true,
         patchDocsCodeBlocks: true,
         showLineNumbers: true,
-        theme: 'github-dark',
+        theme: 'github-light',
       },
     },
   ],

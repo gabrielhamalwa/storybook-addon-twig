@@ -15,6 +15,9 @@ describe('installAddonStyles', () => {
 
     expect(document.querySelectorAll('#storybook-addon-twig-styles')).toHaveLength(1);
     expect(document.querySelector('#storybook-addon-twig-styles')?.textContent).toContain('.satw-panel');
-    expect(document.querySelector('#storybook-addon-twig-styles')?.textContent).toContain('.satw-code-block');
+    expect(document.querySelector('#storybook-addon-twig-styles')?.textContent).toContain('.satw-code--docs');
+    expect(document.querySelector('#storybook-addon-twig-styles')?.textContent).toContain(
+      'background: transparent !important;',
+    );
   });
 });

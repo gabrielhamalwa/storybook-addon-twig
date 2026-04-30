@@ -5,7 +5,7 @@ export const DEFAULT_OPTIONS: NormalizedTwigAddonOptions = {
   panel: true,
   patchDocsCodeBlocks: true,
   showLineNumbers: true,
-  theme: 'github-dark',
+  theme: 'github-light',
   wrapLines: true,
 };
 

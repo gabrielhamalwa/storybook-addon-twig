@@ -19,7 +19,7 @@ const THEME_REGISTRY = {
   'light-plus': lightPlus,
 } satisfies Record<string, ThemeRegistrationRaw>;
 
-const DEFAULT_THEME = 'github-dark';
+const DEFAULT_THEME = 'github-light';
 type SupportedTheme = keyof typeof THEME_REGISTRY;
 
 const highlighters = new Map<string, Promise<{ highlighter: HighlighterCore; language: 'twig'; theme: string }>>();

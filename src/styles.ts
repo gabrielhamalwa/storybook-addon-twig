@@ -5,8 +5,8 @@ const ADDON_CSS = `
   box-sizing: border-box;
   height: 100%;
   min-height: 100%;
-  background: #101418;
-  color: #f5f7fb;
+  background: #ffffff;
+  color: #2e3438;
   font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
 }
 
@@ -15,7 +15,7 @@ const ADDON_CSS = `
   align-content: center;
   gap: 8px;
   padding: 24px;
-  color: #c7d0dd;
+  color: #5c6873;
 }
 
 .satw-panel__header {
@@ -24,22 +24,22 @@ const ADDON_CSS = `
   align-items: center;
   justify-content: space-between;
   gap: 16px;
-  border-bottom: 1px solid #27313d;
+  border-bottom: 1px solid #d9e2ec;
   padding: 8px 12px;
 }
 
 .satw-panel__file {
   margin-left: 8px;
-  color: #9da9b8;
+  color: #667085;
   font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
   font-size: 12px;
 }
 
 .satw-panel__button {
-  border: 1px solid #465567;
+  border: 1px solid #d9e2ec;
   border-radius: 4px;
-  background: #18212b;
-  color: #f5f7fb;
+  background: #ffffff;
+  color: #2e3438;
   cursor: pointer;
   font-size: 12px;
   line-height: 1;
@@ -47,7 +47,7 @@ const ADDON_CSS = `
 }
 
 .satw-panel__button:hover {
-  background: #223041;
+  background: #f6f9fc;
 }
 
 .satw-panel__code {
@@ -56,6 +56,7 @@ const ADDON_CSS = `
 }
 
 .satw-code {
+  background: transparent !important;
   box-sizing: border-box;
   margin: 0;
   min-height: 100%;
@@ -91,10 +92,8 @@ const ADDON_CSS = `
   user-select: none;
 }
 
-.satw-code-block {
-  margin: 16px 0;
-  overflow: hidden;
-  border-radius: 6px;
+.satw-code--docs {
+  min-height: 0;
 }
 `;
 
