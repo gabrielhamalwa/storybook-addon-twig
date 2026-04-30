@@ -1,0 +1,31 @@
+import { Meta, Source } from '@storybook/addon-docs/blocks';
+
+<Meta title="Twig Source/MDX Code Blocks" />
+
+# MDX Twig code blocks
+
+```twig
+{% set items = ['Alpha', 'Beta', 'Gamma'] %}
+
+<ul>
+  {% for item in items %}
+    <li>{{ item|upper }}</li>
+  {% endfor %}
+</ul>
+```
+
+```html.twig
+<article class="card">
+  {% block content %}
+    <h2>{{ title }}</h2>
+  {% endblock %}
+</article>
+```
+
+<Source
+  language="twig"
+  code={`{% include 'button.twig' with {
+  label: 'From Source block',
+  variant: 'secondary'
+} %}`}
+/>

@@ -1,0 +1,6 @@
+<button class="button button--{{ variant|default('primary') }}" type="{{ type|default('button') }}">
+  {% if icon is defined %}
+    <span class="button__icon">{{ icon }}</span>
+  {% endif %}
+  <span class="button__label">{{ label }}</span>
+</button>

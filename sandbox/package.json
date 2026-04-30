@@ -1,0 +1,21 @@
+{
+  "private": true,
+  "name": "storybook-addon-twig-sandbox",
+  "type": "module",
+  "scripts": {
+    "storybook": "storybook dev -p 6007 --no-open",
+    "build-storybook": "storybook build"
+  },
+  "devDependencies": {
+    "@storybook/addon-docs": "^10.3.0",
+    "@storybook/react-vite": "^10.3.0",
+    "@types/react": "^18.2.65",
+    "@types/react-dom": "^18.2.21",
+    "@vitejs/plugin-react": "^4.7.0",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "storybook": "^10.3.0",
+    "typescript": "^5.8.3",
+    "vite": "^7.0.5"
+  }
+}

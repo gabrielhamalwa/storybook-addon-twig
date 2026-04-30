@@ -1,0 +1,18 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+  <article class="card" data-controller="card">
+    <style>
+      .card { display: grid; gap: 1rem; }
+    </style>
+
+    <script>
+      window.dispatchEvent(new CustomEvent('card:ready'));
+    </script>
+
+    {% include 'button.twig' with {
+      label: 'Save changes',
+      variant: 'primary'
+    } %}
+  </article>
+{% endblock %}
