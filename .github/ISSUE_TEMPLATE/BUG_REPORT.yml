@@ -1,0 +1,67 @@
+name: Bug report
+description: Report something broken or unexpected.
+title: '[Bug]: '
+body:
+  - type: dropdown
+    id: area
+    attributes:
+      label: Affected area
+      multiple: true
+      options:
+        - Twig panel
+        - Docs/source patching
+        - Syntax highlighting
+        - Copy button
+        - Storybook compatibility
+        - Sandbox
+        - Documentation
+        - Build or release
+        - Not sure
+    validations:
+      required: true
+  - type: textarea
+    id: versions
+    attributes:
+      label: Versions
+      value: |
+        - storybook-addon-twig:
+        - Storybook:
+        - Builder:
+        - Node:
+        - Bun:
+        - Browser:
+    validations:
+      required: true
+  - type: textarea
+    id: description
+    attributes:
+      label: What happened?
+      description: Describe the actual behavior and what you expected.
+    validations:
+      required: true
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: Reproduction
+      description: Provide a minimal reproduction repository or exact steps.
+      placeholder: |
+        1. Install ...
+        2. Configure ...
+        3. Open ...
+        4. See ...
+    validations:
+      required: true
+  - type: textarea
+    id: logs
+    attributes:
+      label: Logs or screenshots
+      render: shell
+  - type: checkboxes
+    id: checks
+    attributes:
+      label: Before submitting
+      options:
+        - label: I checked existing issues for duplicates.
+          required: true
+        - label: I can reproduce this with the latest available version or current main branch.
+          required: true

@@ -1,0 +1,11 @@
+name: Question
+description: Ask a scoped usage or design question.
+title: '[Question]: '
+body:
+  - type: textarea
+    id: question
+    attributes:
+      label: Question
+      description: Include your Storybook setup and what you tried.
+    validations:
+      required: true
