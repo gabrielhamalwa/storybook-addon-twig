@@ -14,6 +14,9 @@ Twig source and code display for [Storybook](https://storybook.js.org/).
 bun add -d storybook-addon-twig
 ```
 
+> [!NOTE]
+> This package is designed for Storybook 10.
+
 Register the addon:
 
 ```ts
@@ -49,6 +52,9 @@ export const Default = {
   },
 };
 ```
+
+> [!TIP]
+> `source` is displayed exactly as provided. Pass formatted Twig when you want the panel and Docs output to preserve project formatting.
 
 ## Options
 
@@ -91,4 +97,4 @@ The sandbox [Storybook](https://storybook.js.org/) lives in `sandbox/` and resol
 
 ## License
 
-MIT
+[MIT](LICENSE)
