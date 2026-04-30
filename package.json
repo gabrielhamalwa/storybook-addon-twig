@@ -1,12 +1,12 @@
 {
   "name": "storybook-addon-twig",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Twig source, code, and docs support for Storybook.",
   "keywords": [
     "storybook-addon",
+    "code",
     "twig",
     "source",
-    "code",
     "syntax-highlighting",
     "template",
     "html"
