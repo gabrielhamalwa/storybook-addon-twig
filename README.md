@@ -4,9 +4,9 @@
 [![License](https://img.shields.io/badge/license-MIT-brightgreen.svg)](LICENSE)
 [![Storybook](https://img.shields.io/badge/Storybook-%5E10-ff4785)](https://storybook.js.org/)
 
-Twig source and code display for [Storybook](https://storybook.js.org/).
+Twig source and code highlighting for [Storybook](https://storybook.js.org/).
 
-`storybook-addon-twig` adds a `Twig` panel for story-level source and re-highlights Twig code blocks rendered by Storybook Docs.
+`storybook-addon-twig` registers Twig syntax with Storybook's native code blocks and adds a `Twig` panel for story-level source.
 
 ## Install
 
@@ -29,9 +29,8 @@ const config: StorybookConfig = {
       name: 'storybook-addon-twig',
       options: {
         copy: true,
-        patchDocsCodeBlocks: true,
+        docsCodeBlocks: true,
         showLineNumbers: true,
-        theme: 'github-light',
       },
     },
   ],
@@ -58,16 +57,15 @@ export const Default = {
 
 ## Options
 
-| Option                | Default        | Purpose                                                                              |
-| --------------------- | -------------- | ------------------------------------------------------------------------------------ |
-| `theme`               | `github-light` | Supported bundled theme: `github-light`, `github-dark`, `light-plus`, or `dark-plus` |
-| `patchDocsCodeBlocks` | `true`         | Re-highlight rendered Storybook `twig` docs/source blocks                            |
-| `panel`               | `true`         | Register the dedicated `Twig` addon panel                                            |
-| `copy`                | `true`         | Show copy controls in the Twig panel                                                 |
-| `showLineNumbers`     | `true`         | Show line numbers in addon-rendered code                                             |
-| `wrapLines`           | `true`         | Wrap long lines in addon-rendered code                                               |
+| Option            | Default | Purpose                                                     |
+| ----------------- | ------- | ----------------------------------------------------------- |
+| `docsCodeBlocks`  | `true`  | Register Twig syntax for Storybook Docs and MDX code blocks |
+| `panel`           | `true`  | Register the dedicated `Twig` addon panel                   |
+| `copy`            | `true`  | Show copy controls in the Twig panel                        |
+| `showLineNumbers` | `true`  | Show line numbers in the Twig panel                         |
+| `wrapLines`       | `true`  | Wrap long lines in the Twig panel                           |
 
-The addon keeps code backgrounds transparent so Storybook controls the surrounding Source block styling. Unsupported theme names fall back to `github-light` to keep addon rendering stable.
+The addon uses Storybook's native panel, code viewer, copy action, and theme. It does not replace Storybook's Docs code block markup.
 
 ## Development
 

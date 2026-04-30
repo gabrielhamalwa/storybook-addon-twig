@@ -16,9 +16,8 @@ Unit tests cover:
 
 - Option normalization.
 - Source collection.
-- Copy helper behavior.
-- Shiki rendering.
-- DOM patch cleanup.
+- Storybook Twig language registration.
+- Panel rendering through Storybook's native code viewer.
 
 Sandbox/browser smoke tests should verify:
 
@@ -26,8 +25,8 @@ Sandbox/browser smoke tests should verify:
 - `parameters.twig.source` renders with highlighting.
 - Copy works.
 - Line numbers render.
-- MDX fenced Twig blocks are patched.
-- `<Source language="twig" />` blocks are patched.
-- Story navigation keeps one patched block per original code block.
+- MDX fenced Twig blocks render through Storybook's native code block UI.
+- `<Source language="twig" />` blocks use the registered Twig grammar.
+- Story navigation does not create duplicate code blocks.
 
 The current CI runs [Bun](https://bun.sh/) install, build, 100% coverage-gated tests, lint, format check, typecheck, root [Storybook](https://storybook.js.org/) build, and standalone sandbox Storybook build.

@@ -8,8 +8,7 @@ export default {
     {
       name: 'storybook-addon-twig',
       options: {
-        theme: 'github-light',
-        patchDocsCodeBlocks: true,
+        docsCodeBlocks: true,
         copy: true,
         showLineNumbers: true,
       },
@@ -22,8 +21,7 @@ export default {
 
 ```ts
 export type TwigAddonOptions = {
-  theme?: string;
-  patchDocsCodeBlocks?: boolean;
+  docsCodeBlocks?: boolean;
   panel?: boolean;
   copy?: boolean;
   showLineNumbers?: boolean;
@@ -31,9 +29,9 @@ export type TwigAddonOptions = {
 };
 ```
 
-Supported `theme` values are `github-light`, `github-dark`, `light-plus`, and `dark-plus`. Unknown theme names fall back to `github-light` instead of failing the panel or docs rendering path.
+The dedicated Twig panel uses Storybook's native code viewer. Storybook controls the visual theme for both the panel and Docs code blocks.
 
-Code backgrounds are transparent. Storybook remains responsible for the Source block container, border, spacing, and surrounding background.
+`patchDocsCodeBlocks` is still accepted as a compatibility alias for `docsCodeBlocks`.
 
 ## Story parameters
 
