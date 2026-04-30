@@ -18,7 +18,7 @@ export default defineConfig(async () => {
     external: [/^storybook(\/.*)?$/, /^@storybook\/.*/, /^react(\/.*)?$/, /^react-dom(\/.*)?$/],
     format: ['esm'],
     splitting: true,
-    sourcemap: true,
+    sourcemap: false,
     treeshake: true,
   };
 

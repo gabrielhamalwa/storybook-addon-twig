@@ -1,6 +1,6 @@
 {
   "name": "storybook-addon-twig",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "Twig source, code, and docs support for Storybook.",
   "keywords": [
     "storybook-addon",
@@ -53,8 +53,7 @@
     "LICENSE",
     "manager.js",
     "preview.js",
-    "preset.js",
-    "!dist/**/*.map"
+    "preset.js"
   ],
   "scripts": {
     "prebuild": "node -e \"fs.rmSync('./dist', { recursive: true, force: true })\"",
