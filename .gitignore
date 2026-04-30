@@ -1,0 +1,10 @@
+node_modules/
+dist/
+coverage/
+storybook-static/
+sandbox/storybook-static/
+debug-storybook.log
+*.tgz
+.DS_Store
+.env
+.env.*

@@ -1,0 +1,31 @@
+{
+  "compileOnSave": false,
+  "compilerOptions": {
+    "allowSyntheticDefaultImports": true,
+    "baseUrl": ".",
+    "declaration": true,
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
+    "isolatedModules": true,
+    "jsx": "react-jsx",
+    "lib": ["dom", "dom.iterable", "esnext"],
+    "module": "preserve",
+    "moduleResolution": "bundler",
+    "noImplicitAny": true,
+    "noUnusedLocals": true,
+    "skipLibCheck": true,
+    "strict": true,
+    "target": "esnext",
+    "types": ["node"]
+  },
+  "exclude": ["dist", "node_modules", "storybook-static"],
+  "include": [
+    "src/**/*",
+    "stories/**/*",
+    "sandbox/src/**/*",
+    ".storybook/**/*",
+    "sandbox/.storybook/**/*",
+    "tsup.config.ts",
+    "vitest.config.ts"
+  ]
+}
