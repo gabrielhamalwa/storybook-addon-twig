@@ -12,9 +12,8 @@ const config: StorybookConfig = {
       name: path.resolve(currentDirectory, '..'),
       options: {
         copy: true,
-        patchDocsCodeBlocks: true,
+        docsCodeBlocks: true,
         showLineNumbers: true,
-        theme: 'github-light',
       },
     },
   ],

@@ -2,17 +2,19 @@ import type { NormalizedTwigAddonOptions, TwigAddonOptions, TwigSourceParameter 
 
 export const DEFAULT_OPTIONS: NormalizedTwigAddonOptions = {
   copy: true,
+  docsCodeBlocks: true,
   panel: true,
-  patchDocsCodeBlocks: true,
   showLineNumbers: true,
-  theme: 'github-light',
   wrapLines: true,
 };
 
 export function normalizeOptions(options: TwigAddonOptions | undefined): NormalizedTwigAddonOptions {
+  const { patchDocsCodeBlocks, ...currentOptions } = options ?? {};
+
   return {
     ...DEFAULT_OPTIONS,
-    ...options,
+    ...currentOptions,
+    docsCodeBlocks: currentOptions.docsCodeBlocks ?? patchDocsCodeBlocks ?? DEFAULT_OPTIONS.docsCodeBlocks,
   };
 }
 

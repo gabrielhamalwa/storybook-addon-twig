@@ -6,10 +6,9 @@ describe('normalizeOptions', () => {
   it('uses stable defaults', () => {
     expect(normalizeOptions(undefined)).toMatchObject({
       copy: true,
+      docsCodeBlocks: true,
       panel: true,
-      patchDocsCodeBlocks: true,
       showLineNumbers: true,
-      theme: 'github-light',
       wrapLines: true,
     });
   });
@@ -18,19 +17,23 @@ describe('normalizeOptions', () => {
     expect(
       normalizeOptions({
         copy: false,
+        docsCodeBlocks: false,
         panel: false,
-        patchDocsCodeBlocks: false,
         showLineNumbers: false,
-        theme: 'github-light',
         wrapLines: false,
       }),
     ).toMatchObject({
       copy: false,
+      docsCodeBlocks: false,
       panel: false,
-      patchDocsCodeBlocks: false,
       showLineNumbers: false,
-      theme: 'github-light',
       wrapLines: false,
+    });
+  });
+
+  it('keeps the old Docs option name as a compatibility alias', () => {
+    expect(normalizeOptions({ patchDocsCodeBlocks: false })).toMatchObject({
+      docsCodeBlocks: false,
     });
   });
 });

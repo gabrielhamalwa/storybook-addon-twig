@@ -2,17 +2,15 @@ import React from 'react';
 import { addons, types } from 'storybook/manager-api';
 
 import { ADDON_ID, OPTIONS_GLOBAL, PANEL_ID } from './constants';
+import { registerTwigLanguage } from './highlight/registerTwigLanguage';
 import { normalizeOptions } from './options';
 import { TwigPanel } from './panel/TwigPanel';
-import { installAddonStyles } from './styles';
 import type { TwigAddonOptions } from './types';
 
 const globalOptions = typeof window !== 'undefined' ? window[OPTIONS_GLOBAL] : undefined;
 const options = normalizeOptions(globalOptions);
 
-if (typeof document !== 'undefined') {
-  installAddonStyles(document);
-}
+registerTwigLanguage();
 
 addons.register(ADDON_ID, () => {
   if (!options.panel) {
@@ -22,9 +20,9 @@ addons.register(ADDON_ID, () => {
   addons.add(PANEL_ID, {
     type: types.PANEL,
     title: 'Twig',
-    render: ({ active }) =>
+    render: (props) =>
       React.createElement(TwigPanel, {
-        active: Boolean(active),
+        ...props,
         options: globalOptions as TwigAddonOptions | undefined,
       }),
   });

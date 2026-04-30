@@ -6,7 +6,7 @@ import { ADDON_ID, OPTIONS_GLOBAL, PANEL_ID } from './constants';
 
 const addMock = vi.hoisted(() => vi.fn());
 const registerMock = vi.hoisted(() => vi.fn((_id: string, callback: () => void) => callback()));
-const installAddonStylesMock = vi.hoisted(() => vi.fn());
+const registerTwigLanguageMock = vi.hoisted(() => vi.fn());
 
 vi.mock('storybook/manager-api', () => ({
   addons: {
@@ -18,12 +18,12 @@ vi.mock('storybook/manager-api', () => ({
   },
 }));
 
-vi.mock('./styles', () => ({
-  installAddonStyles: installAddonStylesMock,
-}));
-
 vi.mock('./panel/TwigPanel', () => ({
   TwigPanel: ({ active }: { active: boolean }) => <div data-testid="twig-panel">{String(active)}</div>,
+}));
+
+vi.mock('./highlight/registerTwigLanguage', () => ({
+  registerTwigLanguage: registerTwigLanguageMock,
 }));
 
 describe('manager entry', () => {
@@ -31,15 +31,15 @@ describe('manager entry', () => {
     vi.resetModules();
     addMock.mockClear();
     registerMock.mockClear();
-    installAddonStylesMock.mockClear();
+    registerTwigLanguageMock.mockClear();
     delete window[OPTIONS_GLOBAL];
   });
 
   it('registers the Twig panel with normalized default options', async () => {
     await import('./manager');
 
-    expect(installAddonStylesMock).toHaveBeenCalledWith(document);
     expect(registerMock).toHaveBeenCalledWith(ADDON_ID, expect.any(Function));
+    expect(registerTwigLanguageMock).toHaveBeenCalledTimes(1);
     expect(addMock).toHaveBeenCalledWith(
       PANEL_ID,
       expect.objectContaining({
@@ -61,19 +61,17 @@ describe('manager entry', () => {
   it('passes active state and raw global options to the panel renderer', async () => {
     window[OPTIONS_GLOBAL] = {
       copy: false,
-      theme: 'github-light',
     };
 
     await import('./manager');
 
     const [, panelDefinition] = addMock.mock.calls[0] as [string, { render: (props: { active?: boolean }) => unknown }];
 
-    expect(panelDefinition.render({ active: 1 as unknown as boolean })).toMatchObject({
+    expect(panelDefinition.render({ active: true })).toMatchObject({
       props: expect.objectContaining({
         active: true,
         options: {
           copy: false,
-          theme: 'github-light',
         },
       }),
     });

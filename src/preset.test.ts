@@ -6,21 +6,21 @@ import { managerHead, previewHead } from './preset';
 describe('preset head hooks', () => {
   it('injects serialized addon options into manager and preview heads', () => {
     const options = {
-      patchDocsCodeBlocks: false,
-      theme: 'github-light',
+      docsCodeBlocks: false,
+      showLineNumbers: false,
     };
 
     expect(managerHead('<meta name="manager" />', options)).toContain(
-      `window.${OPTIONS_GLOBAL} = {"patchDocsCodeBlocks":false,"theme":"github-light"}`,
+      `window.${OPTIONS_GLOBAL} = {"docsCodeBlocks":false,"showLineNumbers":false}`,
     );
     expect(previewHead('<meta name="preview" />', options)).toContain(
-      `window.${OPTIONS_GLOBAL} = {"patchDocsCodeBlocks":false,"theme":"github-light"}`,
+      `window.${OPTIONS_GLOBAL} = {"docsCodeBlocks":false,"showLineNumbers":false}`,
     );
   });
 
   it('escapes option values that could break out of a script tag', () => {
     const head = managerHead('', {
-      theme: '</script><script>alert(1)</script>',
+      copy: '</script><script>alert(1)</script>' as unknown as boolean,
     });
 
     expect(head).toContain('\\u003c/script>');

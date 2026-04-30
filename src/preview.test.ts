@@ -4,43 +4,39 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { OPTIONS_GLOBAL } from './constants';
 
-const installTwigCodeBlockPatchMock = vi.hoisted(() => vi.fn(() => vi.fn()));
-const installAddonStylesMock = vi.hoisted(() => vi.fn());
+const registerTwigLanguageMock = vi.hoisted(() => vi.fn());
 
-vi.mock('./runtime/patchCodeBlocks', () => ({
-  installTwigCodeBlockPatch: installTwigCodeBlockPatchMock,
-}));
-
-vi.mock('./styles', () => ({
-  installAddonStyles: installAddonStylesMock,
+vi.mock('./highlight/registerTwigLanguage', () => ({
+  registerTwigLanguage: registerTwigLanguageMock,
 }));
 
 describe('preview entry', () => {
   beforeEach(() => {
     vi.resetModules();
-    installTwigCodeBlockPatchMock.mockClear();
-    installAddonStylesMock.mockClear();
-    window.__STORYBOOK_ADDON_TWIG_CLEANUP__ = vi.fn();
-    window[OPTIONS_GLOBAL] = {
-      patchDocsCodeBlocks: false,
-      theme: 'github-light',
-    };
+    registerTwigLanguageMock.mockClear();
+    delete window[OPTIONS_GLOBAL];
   });
 
-  it('installs styles, cleans up previous patches, and registers the current cleanup', async () => {
-    const previousCleanup = window.__STORYBOOK_ADDON_TWIG_CLEANUP__;
-    const cleanup = vi.fn();
-    installTwigCodeBlockPatchMock.mockReturnValueOnce(cleanup);
-
+  it('registers the Twig language for Storybook Docs by default', async () => {
     const preview = await import('./preview');
 
-    expect(installAddonStylesMock).toHaveBeenCalledWith(document);
-    expect(previousCleanup).toHaveBeenCalled();
-    expect(installTwigCodeBlockPatchMock).toHaveBeenCalledWith({
-      patchDocsCodeBlocks: false,
-      theme: 'github-light',
-    });
-    expect(window.__STORYBOOK_ADDON_TWIG_CLEANUP__).toBe(cleanup);
+    expect(registerTwigLanguageMock).toHaveBeenCalledTimes(1);
     expect(preview.decorators).toEqual([]);
+  });
+
+  it('does not register the Twig language when Docs support is disabled', async () => {
+    window[OPTIONS_GLOBAL] = { docsCodeBlocks: false };
+
+    await import('./preview');
+
+    expect(registerTwigLanguageMock).not.toHaveBeenCalled();
+  });
+
+  it('honors the old patchDocsCodeBlocks option as a compatibility alias', async () => {
+    window[OPTIONS_GLOBAL] = { patchDocsCodeBlocks: false };
+
+    await import('./preview');
+
+    expect(registerTwigLanguageMock).not.toHaveBeenCalled();
   });
 });

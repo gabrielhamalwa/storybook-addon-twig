@@ -1,5 +1,6 @@
 export type TwigAddonOptions = {
-  theme?: string;
+  docsCodeBlocks?: boolean;
+  /** @deprecated Use docsCodeBlocks. */
   patchDocsCodeBlocks?: boolean;
   panel?: boolean;
   copy?: boolean;
@@ -19,11 +20,16 @@ export type TwigParameters = {
   twig?: TwigSourceParameter;
 };
 
-export type NormalizedTwigAddonOptions = Required<TwigAddonOptions>;
+export type NormalizedTwigAddonOptions = {
+  docsCodeBlocks: boolean;
+  panel: boolean;
+  copy: boolean;
+  showLineNumbers: boolean;
+  wrapLines: boolean;
+};
 
 declare global {
   interface Window {
-    __STORYBOOK_ADDON_TWIG_CLEANUP__?: () => void;
     __STORYBOOK_ADDON_TWIG_OPTIONS__?: TwigAddonOptions;
   }
 }
