@@ -1,3 +1,4 @@
+import React from 'react';
 import { useParameter } from 'storybook/manager-api';
 
 import { PARAM_KEY } from '../constants';
@@ -19,15 +20,24 @@ export function TwigPanel({ active, options }: TwigPanelProps) {
   }
 
   if (!source) {
-    return (
-      <div className="satw-panel satw-panel--empty">
-        <strong>No Twig source configured</strong>
-        <p>
-          Add <code>parameters.twig.source</code> to this story.
-        </p>
-      </div>
+    return React.createElement(
+      'div',
+      { className: 'satw-panel satw-panel--empty' },
+      React.createElement('strong', null, 'No Twig source configured'),
+      React.createElement(
+        'p',
+        null,
+        'Add ',
+        React.createElement('code', null, 'parameters.twig.source'),
+        ' to this story.',
+      ),
     );
   }
 
-  return <TwigCodeViewer code={source.code} fileName={source.fileName} options={options} parameter={parameter} />;
+  return React.createElement(TwigCodeViewer, {
+    code: source.code,
+    fileName: source.fileName,
+    options,
+    parameter,
+  });
 }

@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 
 import { renderTwigToHtml } from '../highlight/createHighlighter';
 import { mergeSourceOptions, normalizeOptions } from '../options';
@@ -70,21 +70,35 @@ export function TwigCodeViewer({ code, fileName, options, parameter }: TwigCodeV
     }, 1600);
   }
 
-  return (
-    <section className="satw-panel">
-      <header className="satw-panel__header">
-        <div>
-          <strong>Twig</strong>
-          {fileName ? <span className="satw-panel__file">{fileName}</span> : null}
-        </div>
-        {resolvedOptions.copy ? (
-          <button className="satw-panel__button" type="button" aria-label="Copy Twig source" onClick={handleCopy}>
-            {copied ? 'Copied' : 'Copy'}
-          </button>
-        ) : null}
-      </header>
-      <div className="satw-panel__code" dangerouslySetInnerHTML={{ __html: html }} />
-    </section>
+  return React.createElement(
+    'section',
+    { className: 'satw-panel' },
+    React.createElement(
+      'header',
+      { className: 'satw-panel__header' },
+      React.createElement(
+        'div',
+        null,
+        React.createElement('strong', null, 'Twig'),
+        fileName ? React.createElement('span', { className: 'satw-panel__file' }, fileName) : null,
+      ),
+      resolvedOptions.copy
+        ? React.createElement(
+            'button',
+            {
+              'aria-label': 'Copy Twig source',
+              className: 'satw-panel__button',
+              onClick: handleCopy,
+              type: 'button',
+            },
+            copied ? 'Copied' : 'Copy',
+          )
+        : null,
+    ),
+    React.createElement('div', {
+      className: 'satw-panel__code',
+      dangerouslySetInnerHTML: { __html: html },
+    }),
   );
 }
 

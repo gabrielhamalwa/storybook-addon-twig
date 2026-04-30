@@ -18,6 +18,7 @@ if (mapFiles.length > 0) {
 }
 
 const sourceMapReferences = [];
+const jsxRuntimeReferences = [];
 
 for (const file of distFiles.filter((candidate) => candidate.endsWith('.js'))) {
   const contents = await readFile(file, 'utf8');
@@ -25,10 +26,18 @@ for (const file of distFiles.filter((candidate) => candidate.endsWith('.js'))) {
   if (contents.includes('sourceMappingURL')) {
     sourceMapReferences.push(file);
   }
+
+  if (contents.includes('react/jsx-runtime')) {
+    jsxRuntimeReferences.push(file);
+  }
 }
 
 if (sourceMapReferences.length > 0) {
   fail(`Published JavaScript references sourcemaps:\n${formatFiles(sourceMapReferences)}`);
+}
+
+if (jsxRuntimeReferences.length > 0) {
+  fail(`Published JavaScript references react/jsx-runtime:\n${formatFiles(jsxRuntimeReferences)}`);
 }
 
 const packedFiles = execFileSync('npm', ['pack', '--dry-run', '--json'], {

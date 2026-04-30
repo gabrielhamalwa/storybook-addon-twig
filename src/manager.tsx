@@ -1,3 +1,4 @@
+import React from 'react';
 import { addons, types } from 'storybook/manager-api';
 
 import { ADDON_ID, OPTIONS_GLOBAL, PANEL_ID } from './constants';
@@ -21,8 +22,10 @@ addons.register(ADDON_ID, () => {
   addons.add(PANEL_ID, {
     type: types.PANEL,
     title: 'Twig',
-    render: ({ active }) => (
-      <TwigPanel active={Boolean(active)} options={globalOptions as TwigAddonOptions | undefined} />
-    ),
+    render: ({ active }) =>
+      React.createElement(TwigPanel, {
+        active: Boolean(active),
+        options: globalOptions as TwigAddonOptions | undefined,
+      }),
   });
 });
