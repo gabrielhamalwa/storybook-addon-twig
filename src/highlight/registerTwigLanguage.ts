@@ -32,10 +32,6 @@ export function registerTwigLanguage(): void {
 }
 
 function getPrism(): PrismLike | undefined {
-  if (typeof globalThis === 'undefined') {
-    return undefined;
-  }
-
   const candidate = (globalThis as { Prism?: unknown }).Prism;
   if (!candidate || typeof candidate !== 'object') {
     return undefined;

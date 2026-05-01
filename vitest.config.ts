@@ -6,7 +6,6 @@ export default defineConfig({
       include: [
         'src/constants.ts',
         'src/highlight/**/*.ts',
-        'src/index.ts',
         'src/manager.tsx',
         'src/options.ts',
         'src/panel/**/*.tsx',
