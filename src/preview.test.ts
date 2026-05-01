@@ -33,7 +33,7 @@ describe('preview entry', () => {
   });
 
   it('ignores removed legacy options and keeps docs registration enabled', async () => {
-    window[OPTIONS_GLOBAL] = { patchDocsCodeBlocks: false } as unknown as typeof window[typeof OPTIONS_GLOBAL];
+    window[OPTIONS_GLOBAL] = { patchDocsCodeBlocks: false } as unknown as (typeof window)[typeof OPTIONS_GLOBAL];
 
     await import('./preview');
 

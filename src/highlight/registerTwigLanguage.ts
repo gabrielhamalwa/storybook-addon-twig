@@ -107,7 +107,12 @@ const markupTemplating = function markupTemplatingGrammar(Prism: any): void {
                 tokenIndex += 1;
 
                 const before = text.substring(0, placeholderIndex);
-                const middle = new Prism.Token(language, Prism.tokenize(source, env.grammar), `language-${language}`, source);
+                const middle = new Prism.Token(
+                  language,
+                  Prism.tokenize(source, env.grammar),
+                  `language-${language}`,
+                  source,
+                );
                 const after = text.substring(placeholderIndex + placeholder.length);
                 const replacement = [];
 
@@ -183,11 +188,7 @@ const twig = function twigGrammar(Prism: any): void {
       return;
     }
 
-    Prism.languages['markup-templating'].buildPlaceholders(
-      env,
-      'twig',
-      /\{(?:#[\s\S]*?#|%[\s\S]*?%|\{[\s\S]*?\})\}/g,
-    );
+    Prism.languages['markup-templating'].buildPlaceholders(env, 'twig', /\{(?:#[\s\S]*?#|%[\s\S]*?%|\{[\s\S]*?\})\}/g);
   });
 
   Prism.hooks?.add('after-tokenize', (env: any) => {
