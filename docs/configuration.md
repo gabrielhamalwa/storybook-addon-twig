@@ -58,3 +58,8 @@ export const Default = {
 ```
 
 Story-level values override the matching global display options for the Twig panel.
+
+## Panel actions
+
+- `copy` toggles visibility of the `Copy` toolbar action in the `Twig` panel.
+- The sync icon in the panel toolbar refreshes the current story render (`FORCE_RE_RENDER`).

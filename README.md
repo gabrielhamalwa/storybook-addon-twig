@@ -61,7 +61,7 @@ export const Default = {
 | ----------------- | ------- | ----------------------------------------------------------- |
 | `docsCodeBlocks`  | `true`  | Register Twig syntax for Storybook Docs and MDX code blocks |
 | `panel`           | `true`  | Register the dedicated `Twig` addon panel                   |
-| `copy`            | `true`  | Show copy controls in the Twig panel                        |
+| `copy`            | `true`  | Show the `Copy` action in the Twig panel toolbar            |
 | `showLineNumbers` | `true`  | Show line numbers in the Twig panel                         |
 | `wrapLines`       | `true`  | Wrap long lines in the Twig panel                           |
 
@@ -71,6 +71,7 @@ The addon uses Storybook's native Docs code blocks for Twig highlighting. The op
 
 - The `Twig` addon panel and Docs code blocks are independent. You can disable the panel with `panel: false` and keep docs highlighting with `docsCodeBlocks: true`.
 - Storybook's `Source` block inside `Canvas` is rendered in dark mode by Storybook itself. This addon does not force a dark theme.
+- The sync icon in the panel toolbar triggers a Storybook `FORCE_RE_RENDER` refresh for the current story.
 
 ## Migration Notes
 

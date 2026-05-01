@@ -19,6 +19,8 @@ The addon has two rendering surfaces:
 
 Twig highlighting uses a Prism-compatible Twig grammar and registers `twig`, `html.twig`, and `html-twig` aliases so MDX fences and Storybook Source blocks share the same grammar.
 
+Manager-side highlighting uses a bundled Refractor-compatible Twig grammar entry to avoid runtime dependency resolution issues in consumer Storybook Vite setups.
+
 ## Source Text
 
 Source is rendered as provided through `parameters.twig.source`.

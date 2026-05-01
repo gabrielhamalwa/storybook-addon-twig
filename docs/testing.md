@@ -25,10 +25,12 @@ Sandbox/browser smoke tests should verify:
 - The `Twig` panel appears.
 - `parameters.twig.source` renders with highlighting.
 - Copy works.
+- `copy: false` hides the Copy toolbar action.
 - Line numbers render.
 - MDX fenced Twig blocks render through Storybook's native code block UI.
 - `<Source language="twig" />` blocks use the registered Twig grammar.
 - Story navigation does not create duplicate code blocks.
+- Toolbar sync icon refreshes the story render.
 - Storybook dev mode loads the sandbox without browser console errors.
 - The injected addon options contain only addon configuration keys.
 
