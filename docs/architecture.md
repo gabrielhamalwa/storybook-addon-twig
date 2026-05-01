@@ -8,6 +8,8 @@
 - `src/preview.ts` registers Twig syntax for preview-rendered Docs and MDX code.
 - `src/index.ts` is a type-only public entry. Runtime Storybook integration goes through the preset, manager, and preview entries.
 
+Manager and preview runtimes are intentionally separated: panel UI stays in manager code, and docs/source behavior stays in preview code.
+
 The addon has two rendering surfaces:
 
 1. The dedicated `Twig` panel reads `parameters.twig.source` and renders it in the addon panel.
@@ -15,7 +17,7 @@ The addon has two rendering surfaces:
 
 ## Highlighting
 
-Twig highlighting uses a Prism-compatible Twig grammar registered through Storybook's `SyntaxHighlighter.registerLanguage` API. The addon registers `twig`, `html.twig`, and `html-twig` language IDs so MDX fences and Storybook Source blocks share the same grammar.
+Twig highlighting uses a Prism-compatible Twig grammar and registers `twig`, `html.twig`, and `html-twig` aliases so MDX fences and Storybook Source blocks share the same grammar.
 
 ## Source Text
 

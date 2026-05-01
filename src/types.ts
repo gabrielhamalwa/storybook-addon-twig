@@ -1,7 +1,5 @@
 export type TwigAddonOptions = {
   docsCodeBlocks?: boolean;
-  /** @deprecated Use docsCodeBlocks. */
-  patchDocsCodeBlocks?: boolean;
   panel?: boolean;
   copy?: boolean;
   showLineNumbers?: boolean;

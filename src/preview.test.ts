@@ -32,11 +32,11 @@ describe('preview entry', () => {
     expect(registerTwigLanguageMock).not.toHaveBeenCalled();
   });
 
-  it('honors the old patchDocsCodeBlocks option as a compatibility alias', async () => {
-    window[OPTIONS_GLOBAL] = { patchDocsCodeBlocks: false };
+  it('ignores removed legacy options and keeps docs registration enabled', async () => {
+    window[OPTIONS_GLOBAL] = { patchDocsCodeBlocks: false } as unknown as typeof window[typeof OPTIONS_GLOBAL];
 
     await import('./preview');
 
-    expect(registerTwigLanguageMock).not.toHaveBeenCalled();
+    expect(registerTwigLanguageMock).toHaveBeenCalledTimes(1);
   });
 });

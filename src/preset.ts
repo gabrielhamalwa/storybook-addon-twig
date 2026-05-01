@@ -1,7 +1,7 @@
 import { OPTIONS_GLOBAL } from './constants';
 import type { TwigAddonOptions } from './types';
 
-const OPTION_KEYS = ['copy', 'docsCodeBlocks', 'panel', 'patchDocsCodeBlocks', 'showLineNumbers', 'wrapLines'] as const;
+const OPTION_KEYS = ['copy', 'docsCodeBlocks', 'panel', 'showLineNumbers', 'wrapLines'] as const;
 
 export function managerHead(head = '', options?: unknown): string {
   return `${head}\n${createOptionsScript(options)}`;

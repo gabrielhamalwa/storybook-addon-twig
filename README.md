@@ -67,6 +67,24 @@ export const Default = {
 
 The addon uses Storybook's native Docs code blocks for Twig highlighting. The optional manager panel renders story-level Twig source in the addon panel.
 
+## Behavior Notes
+
+- The `Twig` addon panel and Docs code blocks are independent. You can disable the panel with `panel: false` and keep docs highlighting with `docsCodeBlocks: true`.
+- Storybook's `Source` block inside `Canvas` is rendered in dark mode by Storybook itself. This addon does not force a dark theme.
+
+## Migration Notes
+
+- `patchDocsCodeBlocks` is removed. Use `docsCodeBlocks`.
+- `theme` is not part of this addon's API.
+
+## Troubleshooting
+
+If Storybook fails after upgrading this addon, clear optimize-deps/cache artifacts and restart:
+
+```sh
+rm -rf node_modules/.cache/storybook node_modules/.vite
+```
+
 ## Development
 
 This repo is [Bun](https://bun.sh/)-first:

@@ -31,7 +31,14 @@ export type TwigAddonOptions = {
 
 Storybook controls the visual theme for Docs code blocks. The dedicated Twig panel follows the manager theme and uses the same source options.
 
-`patchDocsCodeBlocks` is still accepted as a compatibility alias for `docsCodeBlocks`.
+The panel and Docs support are independent:
+- Keep only docs highlighting: `docsCodeBlocks: true`, `panel: false`
+- Keep only panel: `docsCodeBlocks: false`, `panel: true`
+
+## Migration
+
+- `patchDocsCodeBlocks` was removed. Use `docsCodeBlocks`.
+- `theme` is not an addon option.
 
 ## Story parameters
 

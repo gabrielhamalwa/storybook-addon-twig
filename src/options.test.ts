@@ -31,9 +31,9 @@ describe('normalizeOptions', () => {
     });
   });
 
-  it('keeps the old Docs option name as a compatibility alias', () => {
-    expect(normalizeOptions({ patchDocsCodeBlocks: false })).toMatchObject({
-      docsCodeBlocks: false,
+  it('ignores removed legacy option keys', () => {
+    expect(normalizeOptions({ patchDocsCodeBlocks: false } as never)).toMatchObject({
+      docsCodeBlocks: true,
     });
   });
 });

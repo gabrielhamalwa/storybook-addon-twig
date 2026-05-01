@@ -9,12 +9,9 @@ export const DEFAULT_OPTIONS: NormalizedTwigAddonOptions = {
 };
 
 export function normalizeOptions(options: TwigAddonOptions | undefined): NormalizedTwigAddonOptions {
-  const { patchDocsCodeBlocks, ...currentOptions } = options ?? {};
-
   return {
     ...DEFAULT_OPTIONS,
-    ...currentOptions,
-    docsCodeBlocks: currentOptions.docsCodeBlocks ?? patchDocsCodeBlocks ?? DEFAULT_OPTIONS.docsCodeBlocks,
+    ...(options ?? {}),
   };
 }
 

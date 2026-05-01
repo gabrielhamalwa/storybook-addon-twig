@@ -76,15 +76,19 @@ export function TwigCodeViewer({ code, options, parameter }: TwigCodeViewerProps
     ),
     canCopy
       ? React.createElement(
-          'button',
-          {
-            onClick: () => {
-              void copyCode();
+          'div',
+          { style: styles.footer },
+          React.createElement(
+            'button',
+            {
+              onClick: () => {
+                void copyCode();
+              },
+              style: styles.copyButton,
+              type: 'button',
             },
-            style: styles.copyButton,
-            type: 'button',
-          },
-          copied ? 'Copied' : 'Copy',
+            copied ? 'Copied' : 'Copy',
+          ),
         )
       : null,
   );
@@ -94,9 +98,10 @@ const styles = {
   panel: {
     background: 'var(--color-background, transparent)',
     color: 'var(--color-default-text, inherit)',
+    display: 'grid',
+    gridTemplateRows: 'minmax(0, 1fr) auto',
     height: '100%',
     minHeight: 0,
-    position: 'relative',
   },
   pre: {
     boxSizing: 'border-box',
@@ -106,7 +111,7 @@ const styles = {
     lineHeight: 1.5,
     margin: 0,
     overflowY: 'auto',
-    padding: '16px 16px 48px',
+    padding: 16,
     tabSize: 2,
   },
   code: {
@@ -125,18 +130,22 @@ const styles = {
   lineCode: {
     minWidth: 0,
   },
+  footer: {
+    alignItems: 'center',
+    borderTop: '1px solid var(--color-border, #d9e2ec)',
+    display: 'flex',
+    justifyContent: 'flex-end',
+    padding: 8,
+  },
   copyButton: {
     background: 'var(--color-button-background, #ffffff)',
     border: '1px solid var(--color-border, #d9e2ec)',
     borderRadius: 4,
-    bottom: 8,
     color: 'var(--color-default-text, #2e3438)',
     cursor: 'pointer',
     font: 'inherit',
     fontSize: 12,
     fontWeight: 600,
     padding: '5px 10px',
-    position: 'absolute',
-    right: 8,
   },
 } satisfies Record<string, React.CSSProperties>;
