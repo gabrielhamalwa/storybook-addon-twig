@@ -65,7 +65,7 @@ export const Default = {
 | `showLineNumbers` | `true`  | Show line numbers in the Twig panel                         |
 | `wrapLines`       | `true`  | Wrap long lines in the Twig panel                           |
 
-The addon uses Storybook's native panel, code viewer, copy action, and theme. It does not replace Storybook's Docs code block markup.
+The addon uses Storybook's native panel, code viewer, copy action, Docs markup, and theme.
 
 ## Development
 

@@ -6,7 +6,9 @@ import { managerHead, previewHead } from './preset';
 describe('preset head hooks', () => {
   it('injects serialized addon options into manager and preview heads', () => {
     const options = {
+      configDir: '/local/path/that/must/not/be-injected',
       docsCodeBlocks: false,
+      packageJson: { name: 'storybook' },
       showLineNumbers: false,
     };
 
@@ -18,12 +20,12 @@ describe('preset head hooks', () => {
     );
   });
 
-  it('escapes option values that could break out of a script tag', () => {
+  it('ignores non-boolean values for addon option keys', () => {
     const head = managerHead('', {
       copy: '</script><script>alert(1)</script>' as unknown as boolean,
     });
 
-    expect(head).toContain('\\u003c/script>');
+    expect(head).toContain(`window.${OPTIONS_GLOBAL} = {}`);
     expect(head).not.toContain('</script><script>');
   });
 
