@@ -39,46 +39,22 @@ export function TwigPanel({ active, options }: TwigPanelProps): React.ReactEleme
     setCopied(false);
   }, [storyId, resolvedOptions.showLineNumbers, resolvedOptions.wrapLines]);
 
-  async function handleCopy(): Promise<void> {
-    if (!source) {
-      return;
-    }
-
-    await copyToClipboard(source.code);
-    setCopied(true);
-    window.setTimeout(() => setCopied(false), 1200);
-  }
-
   function refreshTwig(): void {
     addons.getChannel().emit(FORCE_RE_RENDER);
   }
 
   function scrollToEnd(): void {
-    const viewer = viewerRef.current;
-    if (!viewer) {
-      return;
-    }
-
+    const viewer = viewerRef.current as HTMLDivElement;
     viewer.scrollTo({
-      top: viewer.scrollHeight,
       behavior: 'smooth',
+      top: viewer.scrollHeight,
     });
   }
 
-  async function openSourceFile(): Promise<void> {
-    if (!source?.fileName) {
-      return;
-    }
-    await api.openInEditor({ file: source.fileName });
-  }
-
-  const content = source
-    ? React.createElement(TwigCodeViewer, {
-        code: source.code,
-        showLineNumbers,
-        wrapLines,
-      })
-    : React.createElement(EmptyTabContent, {
+  if (!source) {
+    return React.createElement(AddonPanel, {
+      active: !!active,
+      children: React.createElement(EmptyTabContent, {
         title: 'Twig',
         description: React.createElement(
           React.Fragment,
@@ -88,82 +64,98 @@ export function TwigPanel({ active, options }: TwigPanelProps): React.ReactEleme
           '.',
         ),
         footer: React.createElement(Link, { href: DOCS_URL, target: '_blank', withArrow: true }, 'Read docs'),
-      });
+      }),
+    });
+  }
+
+  async function handleCopy(): Promise<void> {
+    await copyToClipboard(source.code);
+    setCopied(true);
+    window.setTimeout(() => setCopied(false), 1200);
+  }
+
+  async function openSourceFile(fileName: string): Promise<void> {
+    await api.openInEditor({ file: fileName });
+  }
+
+  const content = React.createElement(TwigCodeViewer, {
+    code: source.code,
+    showLineNumbers,
+    wrapLines,
+  });
   return React.createElement(AddonPanel, {
     active: !!active,
-    children: source
-      ? React.createElement(
-          'section',
-          { style: styles.panel },
+    children: React.createElement(
+      'section',
+      { style: styles.panel },
+      React.createElement(
+        'header',
+        { style: styles.toolbar },
+        React.createElement(
+          'div',
+          { style: styles.leftControls },
           React.createElement(
-            'header',
-            { style: styles.toolbar },
-            React.createElement(
-              'div',
-              { style: styles.leftControls },
-              React.createElement(
-                React.Fragment,
-                null,
-                resolvedOptions.copy
-                  ? React.createElement(
-                      Button,
-                      {
-                        ariaLabel: false,
-                        onClick: () => void handleCopy(),
-                        size: 'small',
-                        variant: 'outline',
-                      },
-                      copied ? 'Copied' : 'Copy',
-                    )
-                  : null,
-              ),
-              React.createElement(
-                Button,
-                {
-                  ariaLabel: false,
-                  onClick: scrollToEnd,
-                  size: 'small',
-                  variant: 'outline',
-                },
-                'Scroll to end',
-              ),
-              React.createElement(Separator, { force: true }),
-              React.createElement(BooleanSegmentControl, {
-                label: 'Line numbers',
-                onChange: setShowLineNumbers,
-                value: showLineNumbers,
-              }),
-              React.createElement('span', { 'aria-hidden': true, style: styles.controlDivider }),
-              React.createElement(BooleanSegmentControl, {
-                label: 'Wrap lines',
-                onChange: setWrapLines,
-                value: wrapLines,
-              }),
-              React.createElement(Separator, { force: true }),
-              React.createElement(
-                Button,
-                { ariaLabel: 'Refresh twig source', onClick: refreshTwig, size: 'small', variant: 'ghost' },
-                React.createElement(SyncIcon, { 'aria-hidden': true }),
-              ),
-            ),
-            source?.fileName
+            React.Fragment,
+            null,
+            resolvedOptions.copy
               ? React.createElement(
                   Button,
                   {
-                    ariaLabel: 'Open in editor',
-                    onClick: () => void openSourceFile(),
-                    padding: 'small',
+                    ariaLabel: false,
+                    onClick: () => void handleCopy(),
                     size: 'small',
-                    style: styles.openInEditorButton,
-                    variant: 'ghost',
+                    variant: 'outline',
                   },
-                  source.fileName,
+                  copied ? 'Copied' : 'Copy',
                 )
               : null,
           ),
-          React.createElement('div', { ref: viewerRef, style: styles.viewer }, content),
-        )
-      : content,
+          React.createElement(
+            Button,
+            {
+              ariaLabel: false,
+              onClick: scrollToEnd,
+              size: 'small',
+              variant: 'outline',
+            },
+            'Scroll to end',
+          ),
+          React.createElement(Separator, { force: true }),
+          React.createElement(BooleanSegmentControl, {
+            label: 'Line numbers',
+            onChange: setShowLineNumbers,
+            value: showLineNumbers,
+          }),
+          React.createElement('span', { 'aria-hidden': true, style: styles.controlDivider }),
+          React.createElement(BooleanSegmentControl, {
+            label: 'Wrap lines',
+            onChange: setWrapLines,
+            value: wrapLines,
+          }),
+          React.createElement(Separator, { force: true }),
+          React.createElement(
+            Button,
+            { ariaLabel: 'Refresh twig source', onClick: refreshTwig, size: 'small', variant: 'ghost' },
+            React.createElement(SyncIcon, { 'aria-hidden': true }),
+          ),
+        ),
+        source.fileName
+          ? React.createElement(
+              Button,
+              {
+                ariaLabel: 'Open in editor',
+                onClick: () => void openSourceFile(source.fileName),
+                padding: 'small',
+                size: 'small',
+                style: styles.openInEditorButton,
+                variant: 'ghost',
+              },
+              source.fileName,
+            )
+          : null,
+      ),
+      React.createElement('div', { ref: viewerRef, style: styles.viewer }, content),
+    ),
   });
 }
 

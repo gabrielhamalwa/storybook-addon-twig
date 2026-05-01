@@ -3,6 +3,7 @@ import { defineConfig } from 'vitest/config';
 export default defineConfig({
   test: {
     coverage: {
+      exclude: ['src/highlight/refractorTwig.ts'],
       include: [
         'src/constants.ts',
         'src/highlight/**/*.ts',

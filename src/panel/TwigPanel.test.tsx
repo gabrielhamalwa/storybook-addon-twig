@@ -10,13 +10,22 @@ const useParameterMock = vi.hoisted(() => vi.fn());
 const useStorybookStateMock = vi.hoisted(() => vi.fn(() => ({ storyId: 'story-1' })));
 const openInEditorMock = vi.hoisted(() => vi.fn().mockResolvedValue({}));
 const copyToClipboardMock = vi.hoisted(() => vi.fn().mockResolvedValue(undefined));
+const emitMock = vi.hoisted(() => vi.fn());
+const getChannelMock = vi.hoisted(() => vi.fn(() => ({ emit: emitMock })));
 
 vi.mock('storybook/manager-api', () => ({
   useParameter: useParameterMock,
   useStorybookState: useStorybookStateMock,
+  addons: {
+    getChannel: getChannelMock,
+  },
   useStorybookApi: () => ({
     openInEditor: openInEditorMock,
   }),
+}));
+
+vi.mock('storybook/internal/core-events', () => ({
+  FORCE_RE_RENDER: 'forceReRender',
 }));
 
 vi.mock('storybook/internal/components', () => ({
@@ -91,6 +100,7 @@ describe('TwigPanel', () => {
     useStorybookStateMock.mockReturnValue({ storyId: 'story-1' });
     copyToClipboardMock.mockClear();
     openInEditorMock.mockClear();
+    emitMock.mockClear();
   });
 
   afterEach(() => {
@@ -140,6 +150,7 @@ describe('TwigPanel', () => {
   });
 
   it('copies source from top Copy button', async () => {
+    vi.useFakeTimers();
     useParameterMock.mockReturnValue({ fileName: 'button.twig', source: '{{ label }}' });
 
     root.render(<TwigPanel active />);
@@ -154,6 +165,14 @@ describe('TwigPanel', () => {
     await vi.waitFor(() => {
       expect(copyToClipboardMock).toHaveBeenCalledWith('{{ label }}');
     });
+    await vi.waitFor(() => {
+      const copiedButton = Array.from(container.querySelectorAll('button')).find(
+        (button) => button.textContent === 'Copied',
+      );
+      expect(copiedButton).toBeDefined();
+    });
+    vi.runAllTimers();
+    vi.useRealTimers();
   });
 
   it('resets toggles when story id changes', async () => {
@@ -213,5 +232,74 @@ describe('TwigPanel', () => {
 
     const copyButton = Array.from(container.querySelectorAll('button')).find((button) => button.textContent === 'Copy');
     expect(copyButton).toBeUndefined();
+  });
+
+  it('does not render open-in-editor button when fileName is missing', async () => {
+    useParameterMock.mockReturnValue({ source: '{{ label }}' });
+
+    root.render(<TwigPanel active />);
+
+    await vi.waitFor(() => {
+      expect(container.querySelector('[data-testid="viewer"]')).not.toBeNull();
+    });
+
+    const editorButton = container.querySelector('button[aria-label="Open in editor"]');
+    expect(editorButton).toBeNull();
+  });
+
+  it('refresh button emits FORCE_RE_RENDER', async () => {
+    useParameterMock.mockReturnValue({ fileName: 'button.twig', source: '{{ label }}' });
+
+    root.render(<TwigPanel active />);
+
+    await vi.waitFor(() => {
+      expect(container.querySelectorAll('button').length).toBeGreaterThan(0);
+    });
+
+    const refreshButton = container.querySelector('button[aria-label="Refresh twig source"]');
+    refreshButton?.dispatchEvent(new MouseEvent('click', { bubbles: true }));
+
+    expect(emitMock).toHaveBeenCalledWith('forceReRender');
+  });
+
+  it('scrolls code viewer to end from header button', async () => {
+    useParameterMock.mockReturnValue({ fileName: 'button.twig', source: '{{ label }}' });
+    const scrollToMock = vi.fn();
+    Object.defineProperty(HTMLElement.prototype, 'scrollTo', {
+      configurable: true,
+      value: scrollToMock,
+      writable: true,
+    });
+
+    root.render(<TwigPanel active />);
+
+    await vi.waitFor(() => {
+      expect(container.querySelectorAll('button').length).toBeGreaterThan(0);
+    });
+
+    const scrollButton = Array.from(container.querySelectorAll('button')).find(
+      (button) => button.textContent === 'Scroll to end',
+    );
+    scrollButton?.dispatchEvent(new MouseEvent('click', { bubbles: true }));
+
+    expect(scrollToMock).toHaveBeenCalled();
+  });
+
+  it('allows selecting On for wrap lines segment', async () => {
+    useParameterMock.mockReturnValue({ fileName: 'button.twig', source: '{{ label }}', wrapLines: false });
+
+    root.render(<TwigPanel active />);
+
+    await vi.waitFor(() => {
+      expect(container.querySelector('[data-testid="viewer"]')?.textContent).toContain('wrap:false');
+    });
+
+    const onButtons = Array.from(container.querySelectorAll('button')).filter((button) => button.textContent === 'On');
+    const wrapOnButton = onButtons[1];
+    wrapOnButton?.dispatchEvent(new MouseEvent('click', { bubbles: true }));
+
+    await vi.waitFor(() => {
+      expect(container.querySelector('[data-testid="viewer"]')?.textContent).toContain('wrap:true');
+    });
   });
 });
