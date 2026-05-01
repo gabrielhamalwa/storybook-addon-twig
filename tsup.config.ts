@@ -19,6 +19,8 @@ export default defineConfig(async () => {
     dts: false,
     external: [/^storybook(\/.*)?$/, /^@storybook\/.*/, /^react(\/.*)?$/, /^react-dom(\/.*)?$/],
     format: ['esm'],
+    noExternal: ['refractor'],
+    skipNodeModulesBundle: false,
     splitting: true,
     sourcemap: false,
     treeshake: true,

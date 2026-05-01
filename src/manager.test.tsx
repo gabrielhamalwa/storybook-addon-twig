@@ -6,6 +6,7 @@ import { ADDON_ID, OPTIONS_GLOBAL, PANEL_ID } from './constants';
 
 const addMock = vi.hoisted(() => vi.fn());
 const registerMock = vi.hoisted(() => vi.fn((_id: string, callback: () => void) => callback()));
+const registerTwigLanguageForManagerMock = vi.hoisted(() => vi.fn());
 
 vi.mock('storybook/manager-api', () => ({
   addons: {
@@ -21,17 +22,23 @@ vi.mock('./panel/TwigPanel', () => ({
   TwigPanel: ({ active }: { active: boolean }) => <div data-testid="twig-panel">{String(active)}</div>,
 }));
 
+vi.mock('./highlight/registerTwigLanguageForManager', () => ({
+  registerTwigLanguageForManager: registerTwigLanguageForManagerMock,
+}));
+
 describe('manager entry', () => {
   beforeEach(() => {
     vi.resetModules();
     addMock.mockClear();
     registerMock.mockClear();
+    registerTwigLanguageForManagerMock.mockClear();
     delete window[OPTIONS_GLOBAL];
   });
 
   it('registers the Twig panel with normalized default options', async () => {
     await import('./manager');
 
+    expect(registerTwigLanguageForManagerMock).toHaveBeenCalledTimes(1);
     expect(registerMock).toHaveBeenCalledWith(ADDON_ID, expect.any(Function));
     expect(addMock).toHaveBeenCalledWith(
       PANEL_ID,
