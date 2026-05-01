@@ -6,7 +6,7 @@
 
 Twig source and code highlighting for [Storybook](https://storybook.js.org/).
 
-`storybook-addon-twig` registers Twig syntax with Storybook's native code blocks and adds a `Twig` panel for story-level source.
+`storybook-addon-twig` registers Twig syntax with Storybook's native Docs code blocks and adds a `Twig` panel for story-level source.
 
 ## Install
 
@@ -65,7 +65,7 @@ export const Default = {
 | `showLineNumbers` | `true`  | Show line numbers in the Twig panel                         |
 | `wrapLines`       | `true`  | Wrap long lines in the Twig panel                           |
 
-The addon uses Storybook's native panel, code viewer, copy action, Docs markup, and theme.
+The addon uses Storybook's native Docs code blocks for Twig highlighting. The optional manager panel renders story-level Twig source in the addon panel.
 
 ## Development
 

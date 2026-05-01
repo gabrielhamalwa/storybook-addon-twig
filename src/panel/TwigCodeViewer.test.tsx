@@ -1,53 +1,9 @@
 // @vitest-environment happy-dom
 
 import { createRoot, type Root } from 'react-dom/client';
-import type { ReactNode } from 'react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { TwigCodeViewer } from './TwigCodeViewer';
-
-const syntaxHighlighterMock = vi.hoisted(() =>
-  vi.fn(
-    ({
-      children,
-      copyable,
-      language,
-      padded,
-      showLineNumbers,
-      wrapLongLines,
-    }: {
-      children: ReactNode;
-      copyable: boolean;
-      language: string;
-      padded: boolean;
-      showLineNumbers: boolean;
-      wrapLongLines: boolean;
-    }) => (
-      <pre
-        data-copyable={String(copyable)}
-        data-language={language}
-        data-padded={String(padded)}
-        data-show-line-numbers={String(showLineNumbers)}
-        data-wrap-long-lines={String(wrapLongLines)}
-        data-testid="syntax-highlighter"
-      >
-        {children}
-      </pre>
-    ),
-  ),
-);
-
-vi.mock('storybook/internal/components', () => ({
-  SyntaxHighlighter: syntaxHighlighterMock,
-}));
-
-vi.mock('storybook/theming', () => ({
-  styled: {
-    div:
-      () =>
-      ({ children }: { children: ReactNode }) => <div data-testid="source-panel">{children}</div>,
-  },
-}));
 
 describe('TwigCodeViewer', () => {
   let container: HTMLDivElement;
@@ -58,35 +14,32 @@ describe('TwigCodeViewer', () => {
     container = document.createElement('div');
     document.body.appendChild(container);
     root = createRoot(container);
-    syntaxHighlighterMock.mockClear();
+    Object.defineProperty(navigator, 'clipboard', {
+      configurable: true,
+      value: {
+        writeText: vi.fn().mockResolvedValue(undefined),
+      },
+    });
   });
 
   afterEach(() => {
     root.unmount();
   });
 
-  it('renders source through Storybook syntax highlighting', async () => {
-    root.render(<TwigCodeViewer code="{{ label }}" />);
+  it('renders source with line numbers', async () => {
+    root.render(
+      <TwigCodeViewer code="{{ label }}" parameter={{ fileName: 'button.html.twig', source: '{{ label }}' }} />,
+    );
 
     await vi.waitFor(() => {
-      expect(container.querySelector('[data-testid="syntax-highlighter"]')).not.toBeNull();
+      expect(container.querySelector('code.language-twig')).not.toBeNull();
     });
 
-    expect(container.querySelector('[data-testid="source-panel"]')).not.toBeNull();
-    expect(container.querySelector('pre')?.textContent).toBe('{{ label }}');
-    expect(syntaxHighlighterMock).toHaveBeenCalledWith(
-      expect.objectContaining({
-        bordered: false,
-        children: '{{ label }}',
-        copyable: true,
-        format: 'dedent',
-        language: 'twig',
-        padded: true,
-        showLineNumbers: true,
-        wrapLongLines: true,
-      }),
-      {},
+    expect(container.querySelector('[role="region"]')?.getAttribute('aria-label')).toBe(
+      'Twig source for button.html.twig',
     );
+    expect(container.querySelector('pre')?.textContent).toContain('1{{ label }}');
+    expect(container.querySelector('button')?.textContent).toBe('Copy');
   });
 
   it('lets story parameters override display options', async () => {
@@ -99,16 +52,66 @@ describe('TwigCodeViewer', () => {
     );
 
     await vi.waitFor(() => {
-      expect(container.querySelector('[data-testid="syntax-highlighter"]')).not.toBeNull();
+      expect(container.querySelector('code.language-twig')).not.toBeNull();
     });
 
-    expect(syntaxHighlighterMock).toHaveBeenCalledWith(
-      expect.objectContaining({
-        copyable: false,
-        showLineNumbers: false,
-        wrapLongLines: false,
-      }),
-      {},
+    expect(container.querySelector('button')).toBeNull();
+    expect(container.querySelector('pre')?.textContent).toBe('{{ label }}');
+  });
+
+  it('keeps line-numbered code unwrapped when wrapping is disabled', async () => {
+    root.render(
+      <TwigCodeViewer
+        code="{{ label }}"
+        options={{ wrapLines: true }}
+        parameter={{ source: '{{ label }}', wrapLines: false }}
+      />,
     );
+
+    await vi.waitFor(() => {
+      expect(container.querySelector('code.language-twig')).not.toBeNull();
+    });
+
+    expect(
+      (container.querySelector('code.language-twig span span:last-child') as HTMLElement | null)?.style.whiteSpace,
+    ).toBe('pre');
+  });
+
+  it('copies source when copy is enabled', async () => {
+    root.render(<TwigCodeViewer code="{{ label }}" />);
+
+    await vi.waitFor(() => {
+      expect(container.querySelector('button')).not.toBeNull();
+    });
+
+    container.querySelector('button')?.click();
+
+    await vi.waitFor(() => {
+      expect(navigator.clipboard.writeText).toHaveBeenCalledWith('{{ label }}');
+    });
+    await vi.waitFor(() => {
+      expect(container.querySelector('button')?.textContent).toBe('Copied');
+    });
+    await new Promise((resolve) => {
+      window.setTimeout(resolve, 1300);
+    });
+    await vi.waitFor(() => {
+      expect(container.querySelector('button')?.textContent).toBe('Copy');
+    });
+  });
+
+  it('hides the copy button when the Clipboard API is unavailable', async () => {
+    Object.defineProperty(navigator, 'clipboard', {
+      configurable: true,
+      value: undefined,
+    });
+
+    root.render(<TwigCodeViewer code="{{ label }}" />);
+
+    await vi.waitFor(() => {
+      expect(container.querySelector('code.language-twig')).not.toBeNull();
+    });
+
+    expect(container.querySelector('button')).toBeNull();
   });
 });

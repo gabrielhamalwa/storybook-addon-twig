@@ -18,7 +18,7 @@ Unit tests cover:
 - Option normalization.
 - Source collection.
 - Storybook Twig language registration.
-- Panel rendering through Storybook's native code viewer.
+- Panel rendering and source display options.
 
 Sandbox/browser smoke tests should verify:
 

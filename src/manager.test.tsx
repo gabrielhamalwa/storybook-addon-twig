@@ -6,7 +6,6 @@ import { ADDON_ID, OPTIONS_GLOBAL, PANEL_ID } from './constants';
 
 const addMock = vi.hoisted(() => vi.fn());
 const registerMock = vi.hoisted(() => vi.fn((_id: string, callback: () => void) => callback()));
-const registerTwigLanguageMock = vi.hoisted(() => vi.fn());
 
 vi.mock('storybook/manager-api', () => ({
   addons: {
@@ -22,16 +21,11 @@ vi.mock('./panel/TwigPanel', () => ({
   TwigPanel: ({ active }: { active: boolean }) => <div data-testid="twig-panel">{String(active)}</div>,
 }));
 
-vi.mock('./highlight/registerTwigLanguage', () => ({
-  registerTwigLanguage: registerTwigLanguageMock,
-}));
-
 describe('manager entry', () => {
   beforeEach(() => {
     vi.resetModules();
     addMock.mockClear();
     registerMock.mockClear();
-    registerTwigLanguageMock.mockClear();
     delete window[OPTIONS_GLOBAL];
   });
 
@@ -39,7 +33,6 @@ describe('manager entry', () => {
     await import('./manager');
 
     expect(registerMock).toHaveBeenCalledWith(ADDON_ID, expect.any(Function));
-    expect(registerTwigLanguageMock).toHaveBeenCalledTimes(1);
     expect(addMock).toHaveBeenCalledWith(
       PANEL_ID,
       expect.objectContaining({

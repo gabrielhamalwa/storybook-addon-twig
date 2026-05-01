@@ -50,6 +50,17 @@ if (jsxRuntimeReferences.length > 0) {
   fail(`Published JavaScript references react/jsx-runtime:\n${formatFiles(jsxRuntimeReferences)}`);
 }
 
+const managerBundle = path.join(distDirectory, 'manager.js');
+const managerContents = await readFile(managerBundle, 'utf8');
+const forbiddenManagerReferences = ['storybook/internal/components', 'storybook/theming'];
+const managerReferenceHits = forbiddenManagerReferences.filter((reference) => managerContents.includes(reference));
+
+if (managerReferenceHits.length > 0) {
+  fail(
+    `Manager bundle references forbidden Storybook UI internals:\n${managerReferenceHits.map((hit) => `- ${hit}`).join('\n')}`,
+  );
+}
+
 for (const [reference, files] of forbiddenRuntimeReferences) {
   if (files.length > 0) {
     fail(`Published JavaScript references ${reference}:\n${formatFiles(files)}`);

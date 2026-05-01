@@ -29,7 +29,7 @@ export type TwigAddonOptions = {
 };
 ```
 
-The dedicated Twig panel uses Storybook's native code viewer. Storybook controls the visual theme for both the panel and Docs code blocks.
+Storybook controls the visual theme for Docs code blocks. The dedicated Twig panel follows the manager theme and uses the same source options.
 
 `patchDocsCodeBlocks` is still accepted as a compatibility alias for `docsCodeBlocks`.
 

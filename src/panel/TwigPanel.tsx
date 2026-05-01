@@ -1,6 +1,5 @@
 import React from 'react';
 import { useParameter } from 'storybook/manager-api';
-import { AddonPanel, EmptyTabContent } from 'storybook/internal/components';
 
 import { PARAM_KEY } from '../constants';
 import { collectTwigSource } from '../runtime/collectSource';
@@ -22,16 +21,54 @@ export function TwigPanel({ active, options }: TwigPanelProps): React.ReactEleme
         options,
         parameter,
       })
-    : React.createElement(EmptyTabContent, {
-        description: React.createElement(
-          React.Fragment,
-          null,
+    : React.createElement(
+        'div',
+        { style: styles.emptyState },
+        React.createElement('h3', { style: styles.emptyTitle }, 'No Twig source configured'),
+        React.createElement(
+          'p',
+          { style: styles.emptyDescription },
           'Add ',
           React.createElement('code', null, 'parameters.twig.source'),
           ' to this story.',
         ),
-        title: 'No Twig source configured',
-      });
+      );
 
-  return React.createElement(AddonPanel, { active: Boolean(active), children: content });
+  return React.createElement(
+    'div',
+    {
+      'aria-hidden': !active,
+      hidden: !active,
+      style: styles.panel,
+    },
+    content,
+  );
 }
+
+const styles = {
+  panel: {
+    background: 'var(--color-background, transparent)',
+    color: 'var(--color-default-text, inherit)',
+    height: '100%',
+    minHeight: 0,
+  },
+  emptyState: {
+    alignItems: 'center',
+    boxSizing: 'border-box',
+    display: 'flex',
+    flexDirection: 'column',
+    height: '100%',
+    justifyContent: 'center',
+    padding: 24,
+    textAlign: 'center',
+  },
+  emptyTitle: {
+    fontSize: 16,
+    margin: '0 0 8px',
+  },
+  emptyDescription: {
+    color: 'var(--color-subtle-text, #73839c)',
+    fontSize: 13,
+    margin: 0,
+  },
+} satisfies Record<string, React.CSSProperties>;
