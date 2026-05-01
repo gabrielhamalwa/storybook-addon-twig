@@ -19,12 +19,17 @@ describe('registerTwigLanguage', () => {
 
     registerTwigLanguage();
 
-    expect(registerLanguageMock).toHaveBeenCalledWith(
-      'twig',
-      expect.objectContaining({
-        aliases: [],
-        displayName: 'twig',
-      }),
+    expect(registerLanguageMock).toHaveBeenCalledTimes(3);
+    expect(registerLanguageMock).toHaveBeenNthCalledWith(1, 'twig', expect.objectContaining({ displayName: 'twig' }));
+    expect(registerLanguageMock).toHaveBeenNthCalledWith(
+      2,
+      'html.twig',
+      expect.objectContaining({ displayName: 'twig' }),
+    );
+    expect(registerLanguageMock).toHaveBeenNthCalledWith(
+      3,
+      'html-twig',
+      expect.objectContaining({ displayName: 'twig' }),
     );
   });
 
@@ -34,6 +39,6 @@ describe('registerTwigLanguage', () => {
     registerTwigLanguage();
     registerTwigLanguage();
 
-    expect(registerLanguageMock).toHaveBeenCalledTimes(1);
+    expect(registerLanguageMock).toHaveBeenCalledTimes(3);
   });
 });

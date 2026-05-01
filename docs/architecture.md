@@ -6,7 +6,7 @@
 - `src/preset.ts` injects serialized addon options into manager and preview HTML.
 - `src/manager.tsx` registers the `Twig` panel and Twig syntax for manager-rendered code.
 - `src/preview.ts` registers Twig syntax for preview-rendered Docs and MDX code.
-- `src/index.ts` exports the CSF preview-addon entry and public TypeScript types.
+- `src/index.ts` is a type-only public entry. Runtime Storybook integration goes through the preset, manager, and preview entries.
 
 The addon has two rendering surfaces:
 
@@ -15,7 +15,7 @@ The addon has two rendering surfaces:
 
 ## Highlighting
 
-Twig highlighting uses [Refractor](https://github.com/wooorm/refractor)'s Prism-compatible Twig grammar registered through Storybook's `SyntaxHighlighter.registerLanguage` API.
+Twig highlighting uses a Prism-compatible Twig grammar registered through Storybook's `SyntaxHighlighter.registerLanguage` API. The addon registers `twig`, `html.twig`, and `html-twig` language IDs so MDX fences and Storybook Source blocks share the same grammar.
 
 ## Source Text
 

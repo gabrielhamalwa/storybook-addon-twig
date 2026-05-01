@@ -38,13 +38,13 @@ bun run storybook
 | Path              | Purpose                                                   |
 | ----------------- | --------------------------------------------------------- |
 | `src/manager.tsx` | Registers the Twig addon panel in the Storybook manager   |
-| `src/preview.ts`  | Installs optional docs/source code-block patching         |
-| `src/preset.ts`   | Wires manager and preview entries into Storybook          |
+| `src/preview.ts`  | Registers Twig syntax for Docs and MDX code blocks        |
+| `src/preset.ts`   | Wires entries and sanitized options into Storybook        |
 | `src/panel`       | React UI for the Twig panel                               |
-| `src/highlight`   | [Shiki](https://shiki.style/) rendering utilities         |
-| `src/runtime`     | DOM patching, source collection, and copy utilities       |
+| `src/highlight`   | Twig syntax registration for Storybook code rendering     |
+| `src/runtime`     | Source collection helpers                                 |
 | `sandbox`         | Storybook 10 app used for manual and browser smoke checks |
 
 ## Pull requests
 
-Pull requests should include tests when they change source collection, highlighting, DOM patching, or public options. UI changes should include a sandbox story that demonstrates the behavior.
+Pull requests should include tests when they change source collection, highlighting, Storybook entry wiring, or public options. UI changes should include a sandbox story that demonstrates the behavior.

@@ -1,6 +1,8 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { SyntaxHighlighter } from 'storybook/internal/components';
 
+import { TWIG_LANGUAGE_ALIASES } from './twigLanguage';
+
 type RefractorLanguage = ((Prism: any) => void) & {
   aliases: string[];
   displayName: string;
@@ -13,7 +15,10 @@ export function registerTwigLanguage(): void {
     return;
   }
 
-  SyntaxHighlighter.registerLanguage('twig', twig);
+  for (const alias of TWIG_LANGUAGE_ALIASES) {
+    SyntaxHighlighter.registerLanguage(alias, twig);
+  }
+
   registered = true;
 }
 

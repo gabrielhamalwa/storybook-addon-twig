@@ -7,6 +7,7 @@ Releases are [npm](https://www.npmjs.com/)-only for now.
 
    ```shell
    bun run build
+   bun run check:package
    bun run typecheck
    bun run coverage
    bun run lint
@@ -18,8 +19,8 @@ Releases are [npm](https://www.npmjs.com/)-only for now.
 3. Create and push a tag:
 
    ```shell
-   git tag v0.1.0
-   git push origin v0.1.0
+   git tag vX.Y.Z
+   git push origin vX.Y.Z
    ```
 
 4. The release workflow publishes to [npm](https://www.npmjs.com/) with [provenance](https://docs.npmjs.com/generating-provenance-statements).

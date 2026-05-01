@@ -74,9 +74,11 @@ This repo is [Bun](https://bun.sh/)-first:
 ```shell
 bun install
 bun run build
-bun run test
+bun run check:package
+bun run coverage
 bun run lint
 bun run format:check
+cd sandbox && bun run build-storybook
 bun run storybook
 ```
 
