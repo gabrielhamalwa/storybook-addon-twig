@@ -2,6 +2,7 @@ import { defineConfig, type Options } from 'tsup';
 
 type BundlerConfig = {
   bundler?: {
+    exportEntries?: string[];
     nodeEntries?: string[];
     managerEntries?: string[];
     previewEntries?: string[];
@@ -10,7 +11,8 @@ type BundlerConfig = {
 
 export default defineConfig(async () => {
   const packageJson = (await import('./package.json', { with: { type: 'json' } })).default as BundlerConfig;
-  const { bundler: { nodeEntries = [], managerEntries = [], previewEntries = [] } = {} } = packageJson;
+  const { bundler: { exportEntries = [], nodeEntries = [], managerEntries = [], previewEntries = [] } = {} } =
+    packageJson;
 
   const commonConfig: Options = {
     clean: false,
@@ -23,6 +25,16 @@ export default defineConfig(async () => {
   };
 
   const configs: Options[] = [];
+
+  if (exportEntries.length) {
+    configs.push({
+      ...commonConfig,
+      dts: true,
+      entry: exportEntries,
+      platform: 'browser',
+      target: 'esnext',
+    });
+  }
 
   if (nodeEntries.length) {
     configs.push({

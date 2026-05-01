@@ -19,6 +19,10 @@ if (mapFiles.length > 0) {
 
 const sourceMapReferences = [];
 const jsxRuntimeReferences = [];
+const forbiddenRuntimeReferences = new Map([
+  ['storybook/internal/csf', []],
+  ['semver', []],
+]);
 
 for (const file of distFiles.filter((candidate) => candidate.endsWith('.js'))) {
   const contents = await readFile(file, 'utf8');
@@ -30,6 +34,12 @@ for (const file of distFiles.filter((candidate) => candidate.endsWith('.js'))) {
   if (contents.includes('react/jsx-runtime')) {
     jsxRuntimeReferences.push(file);
   }
+
+  for (const [reference, files] of forbiddenRuntimeReferences) {
+    if (contents.includes(reference)) {
+      files.push(file);
+    }
+  }
 }
 
 if (sourceMapReferences.length > 0) {
@@ -38,6 +48,12 @@ if (sourceMapReferences.length > 0) {
 
 if (jsxRuntimeReferences.length > 0) {
   fail(`Published JavaScript references react/jsx-runtime:\n${formatFiles(jsxRuntimeReferences)}`);
+}
+
+for (const [reference, files] of forbiddenRuntimeReferences) {
+  if (files.length > 0) {
+    fail(`Published JavaScript references ${reference}:\n${formatFiles(files)}`);
+  }
 }
 
 const packedFiles = execFileSync('npm', ['pack', '--dry-run', '--json'], {

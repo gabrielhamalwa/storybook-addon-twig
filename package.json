@@ -62,11 +62,13 @@
     "url": "https://github.com/gabrielhamalwa/storybook-addon-twig/issues"
   },
   "bundler": {
+    "exportEntries": [
+      "src/index.ts"
+    ],
     "managerEntries": [
       "src/manager.tsx"
     ],
     "previewEntries": [
-      "src/index.ts",
       "src/preview.ts"
     ],
     "nodeEntries": [

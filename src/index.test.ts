@@ -1,20 +1,9 @@
-import { describe, expect, it, vi } from 'vitest';
+import { describe, expect, it } from 'vitest';
 
-const definePreviewAddonMock = vi.hoisted(() => vi.fn((preview: unknown) => ({ preview })));
+describe('public entry', () => {
+  it('does not import Storybook runtime modules from the package root', async () => {
+    const entry = await import('./index');
 
-vi.mock('storybook/internal/csf', () => ({
-  definePreviewAddon: definePreviewAddonMock,
-}));
-
-vi.mock('./preview', () => ({
-  decorators: [],
-}));
-
-describe('twigAddon', () => {
-  it('defines the Storybook preview addon from the preview entry', async () => {
-    const { default: twigAddon } = await import('./index');
-
-    expect(twigAddon()).toEqual({ preview: { decorators: [] } });
-    expect(definePreviewAddonMock).toHaveBeenCalledWith({ decorators: [] });
+    expect(Object.keys(entry)).toEqual([]);
   });
 });
