@@ -67,9 +67,10 @@ export function TwigPanel({ active, options }: TwigPanelProps): React.ReactEleme
       }),
     });
   }
+  const resolvedSource = source;
 
   async function handleCopy(): Promise<void> {
-    await copyToClipboard(source.code);
+    await copyToClipboard(resolvedSource.code);
     setCopied(true);
     window.setTimeout(() => setCopied(false), 1200);
   }
@@ -77,9 +78,10 @@ export function TwigPanel({ active, options }: TwigPanelProps): React.ReactEleme
   async function openSourceFile(fileName: string): Promise<void> {
     await api.openInEditor({ file: fileName });
   }
+  const sourceFileName = resolvedSource.fileName ?? null;
 
   const content = React.createElement(TwigCodeViewer, {
-    code: source.code,
+    code: resolvedSource.code,
     showLineNumbers,
     wrapLines,
   });
@@ -139,18 +141,18 @@ export function TwigPanel({ active, options }: TwigPanelProps): React.ReactEleme
             React.createElement(SyncIcon, { 'aria-hidden': true }),
           ),
         ),
-        source.fileName
+        sourceFileName
           ? React.createElement(
               Button,
               {
                 ariaLabel: 'Open in editor',
-                onClick: () => void openSourceFile(source.fileName),
+                onClick: () => void openSourceFile(sourceFileName),
                 padding: 'small',
                 size: 'small',
                 style: styles.openInEditorButton,
                 variant: 'ghost',
               },
-              source.fileName,
+              sourceFileName,
             )
           : null,
       ),
