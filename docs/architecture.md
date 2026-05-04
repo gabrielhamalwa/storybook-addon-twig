@@ -3,7 +3,7 @@
 `storybook-addon-twig` follows the current [Storybook](https://storybook.js.org/) addon package shape:
 
 - `manager.js` and `preview.js` are package-root entry proxies consumed by [Storybook](https://storybook.js.org/).
-- `preset.js` is the package-root Storybook preset entry that registers `previewAnnotations` and `managerEntries`, then re-exports the dist preset hooks.
+- `preset.js` is the package-root Storybook preset entry that re-exports the dist preset hooks.
 - `src/preset.ts` injects serialized addon options into manager and preview HTML.
 - `src/manager.tsx` registers the optional `Twig` panel.
 - `src/preview.ts` registers the preview-side runtime patcher for Docs/code blocks.
