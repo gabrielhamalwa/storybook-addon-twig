@@ -43,7 +43,9 @@ describe('TwigCodeViewer', () => {
 
     const call = syntaxHighlighterMock.mock.calls.at(-1)?.[0] as Record<string, unknown>;
     expect(call.language).toBe('twig');
+    expect(call.bordered).toBe(false);
     expect(call.copyable).toBe(false);
+    expect(call.padded).toBe(true);
     expect(call.showLineNumbers).toBe(true);
     expect(call.wrapLongLines).toBe(true);
   });
@@ -58,5 +60,29 @@ describe('TwigCodeViewer', () => {
     const call = syntaxHighlighterMock.mock.calls.at(-1)?.[0] as Record<string, unknown>;
     expect(call.showLineNumbers).toBe(true);
     expect(call.wrapLongLines).toBe(false);
+  });
+
+  it('allows docs surfaces to override copy and border behavior', async () => {
+    root.render(
+      <TwigCodeViewer
+        bordered
+        code="{{ label }}"
+        copyable
+        customStyle={{ margin: 12 }}
+        padded={false}
+        showLineNumbers={false}
+        wrapLines
+      />,
+    );
+
+    await vi.waitFor(() => {
+      expect(container.querySelector('[data-testid="syntax-highlighter"]')).not.toBeNull();
+    });
+
+    const call = syntaxHighlighterMock.mock.calls.at(-1)?.[0] as Record<string, unknown>;
+    expect(call.bordered).toBe(true);
+    expect(call.copyable).toBe(true);
+    expect(call.padded).toBe(false);
+    expect(call.customStyle).toMatchObject({ margin: 12, minHeight: '100%' });
   });
 });

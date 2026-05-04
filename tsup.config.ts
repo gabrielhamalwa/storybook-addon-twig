@@ -63,6 +63,7 @@ export default defineConfig(async () => {
       dts: true,
       entry: previewEntries,
       platform: 'browser',
+      splitting: false,
       target: 'esnext',
     });
   }

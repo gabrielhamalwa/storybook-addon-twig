@@ -294,8 +294,11 @@ describe('TwigPanel', () => {
       expect(container.querySelector('[data-testid="viewer"]')?.textContent).toContain('wrap:false');
     });
 
-    const onButtons = Array.from(container.querySelectorAll('button')).filter((button) => button.textContent === 'On');
-    const wrapOnButton = onButtons[1];
+    const wrapLabel = Array.from(container.querySelectorAll('span')).find((span) => span.textContent === 'Wrap lines');
+    const wrapSegmentGroup = wrapLabel?.nextElementSibling;
+    const wrapOnButton = Array.from(wrapSegmentGroup?.querySelectorAll('button') ?? []).find(
+      (button) => button.textContent === 'On',
+    );
     wrapOnButton?.dispatchEvent(new MouseEvent('click', { bubbles: true }));
 
     await vi.waitFor(() => {

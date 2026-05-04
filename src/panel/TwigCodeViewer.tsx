@@ -6,18 +6,33 @@ type TwigCodeViewerProps = {
   code: string;
   showLineNumbers: boolean;
   wrapLines: boolean;
+  bordered?: boolean;
+  copyable?: boolean;
+  customStyle?: React.CSSProperties;
+  padded?: boolean;
 };
 
-export function TwigCodeViewer({ code, showLineNumbers, wrapLines }: TwigCodeViewerProps): React.ReactElement {
+export function TwigCodeViewer({
+  code,
+  showLineNumbers,
+  wrapLines,
+  bordered = false,
+  copyable = false,
+  customStyle,
+  padded = true,
+}: TwigCodeViewerProps): React.ReactElement {
   return React.createElement(
     SyntaxHighlighter,
     {
-      bordered: false,
-      copyable: false,
-      customStyle: styles.codeContainer,
+      bordered,
+      copyable,
+      customStyle: {
+        ...styles.codeContainer,
+        ...customStyle,
+      },
       format: false,
       language: 'twig' as SupportedLanguage,
-      padded: true,
+      padded,
       showLineNumbers,
       wrapLongLines: wrapLines,
     },

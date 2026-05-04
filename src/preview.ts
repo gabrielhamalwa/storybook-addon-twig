@@ -1,13 +1,12 @@
-import { OPTIONS_GLOBAL } from './constants';
-import { registerTwigLanguage } from './highlight/registerTwigLanguage';
-import { normalizeOptions } from './options';
-
-if (typeof window !== 'undefined') {
-  const options = normalizeOptions(window[OPTIONS_GLOBAL]);
-
-  if (options.docsCodeBlocks) {
-    registerTwigLanguage();
-  }
-}
+import type { Preview } from '@storybook/react-vite';
 
 export const decorators = [];
+export const parameters = {};
+import './runtime/patchDocsCodeBlocks';
+
+const preview: Preview = {
+  decorators,
+  parameters,
+};
+
+export default preview;

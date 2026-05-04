@@ -129,8 +129,11 @@
       "svelte",
       "preact"
     ],
-    "preset": "./dist/preset.js"
+    "preset": "./preset.js"
   },
   "type": "module",
-  "types": "dist/index.d.ts"
+  "types": "dist/index.d.ts",
+  "dependencies": {
+    "refractor": "^5.0.0"
+  }
 }
