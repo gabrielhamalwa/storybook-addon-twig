@@ -57,13 +57,13 @@ export const Default = {
 
 ## Options
 
-| Option            | Default | Purpose                                                                |
-| ----------------- | ------- | ---------------------------------------------------------------------- |
-| `docsCodeBlocks`  | `true`  | Enable preview-side Twig docs patching for Twig docs/source blocks      |
-| `panel`           | `true`  | Register the dedicated `Twig` addon panel                              |
-| `copy`            | `true`  | Enable copy actions for addon-owned Twig code surfaces                 |
-| `showLineNumbers` | `true`  | Show line numbers in addon-owned Twig code surfaces                    |
-| `wrapLines`       | `true`  | Wrap long lines in addon-owned Twig code surfaces                      |
+| Option            | Default | Purpose                                                            |
+| ----------------- | ------- | ------------------------------------------------------------------ |
+| `docsCodeBlocks`  | `true`  | Enable preview-side Twig docs patching for Twig docs/source blocks |
+| `panel`           | `true`  | Register the dedicated `Twig` addon panel                          |
+| `copy`            | `true`  | Enable copy actions for addon-owned Twig code surfaces             |
+| `showLineNumbers` | `true`  | Show line numbers in addon-owned Twig code surfaces                |
+| `wrapLines`       | `true`  | Wrap long lines in addon-owned Twig code surfaces                  |
 
 With `docsCodeBlocks: true`, the addon owns Twig rendering for these Docs paths:
 

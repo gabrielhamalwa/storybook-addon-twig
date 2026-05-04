@@ -214,7 +214,7 @@ describe('patchDocsCodeBlocks runtime patcher', () => {
 
     await patchCodeBlock(pre);
 
-    codeElement.textContent = "{% if enabled %}\n  <strong>{{ label }}</strong>\n{% endif %}";
+    codeElement.textContent = '{% if enabled %}\n  <strong>{{ label }}</strong>\n{% endif %}';
 
     await vi.waitFor(() => {
       const patched = pre.nextElementSibling as HTMLElement | null;
