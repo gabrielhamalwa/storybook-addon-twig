@@ -43,7 +43,7 @@
       "default": "./dist/index.js"
     },
     "./preview": {
-      "types": "./dist/preview.d.ts",
+      "types": "./preview.d.ts",
       "import": "./dist/preview.js",
       "default": "./dist/preview.js"
     },
@@ -83,6 +83,7 @@
     "dist/**/*",
     "README.md",
     "LICENSE",
+    "*.d.ts",
     "manager.js",
     "preview.js",
     "preset.js"
