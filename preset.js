@@ -1,4 +1,4 @@
-import { fileURLToPath } from 'node:url';
+import { URL, fileURLToPath } from 'node:url';
 
 const previewEntry = fileURLToPath(new URL('./preview.js', import.meta.url));
 const managerEntry = fileURLToPath(new URL('./manager.js', import.meta.url));
