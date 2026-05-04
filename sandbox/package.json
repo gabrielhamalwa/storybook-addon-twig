@@ -3,8 +3,8 @@
   "name": "storybook-addon-twig-sandbox",
   "type": "module",
   "scripts": {
-    "storybook": "storybook dev -p 6007 --no-open",
-    "build-storybook": "storybook build"
+    "storybook": "cd .. && bun run build && cd sandbox && storybook dev -p 6007 --no-open",
+    "build-storybook": "cd .. && bun run build && cd sandbox && storybook build"
   },
   "devDependencies": {
     "@storybook/addon-docs": "^10.3.0",
@@ -14,6 +14,7 @@
     "@vitejs/plugin-react": "^4.7.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
+    "storybook-addon-twig": "file:..",
     "storybook": "^10.3.0",
     "typescript": "^5.8.3",
     "vite": "^7.0.5"

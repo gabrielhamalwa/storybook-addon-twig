@@ -1,8 +1,5 @@
-import path from 'node:path';
-import { fileURLToPath } from 'node:url';
 import type { StorybookConfig } from '@storybook/react-vite';
 
-const currentDirectory = path.dirname(fileURLToPath(import.meta.url));
 const docsCodeBlocks = process.env.STORYBOOK_ADDON_TWIG_DOCS !== 'false';
 const panel = process.env.STORYBOOK_ADDON_TWIG_PANEL !== 'false';
 
@@ -11,7 +8,7 @@ const config: StorybookConfig = {
   addons: [
     '@storybook/addon-docs',
     {
-      name: path.resolve(currentDirectory, '../..'),
+      name: 'storybook-addon-twig',
       options: {
         copy: true,
         docsCodeBlocks,

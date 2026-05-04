@@ -18,6 +18,7 @@ Unit tests cover:
 - Option normalization.
 - Source collection.
 - Storybook Twig language registration.
+- Preview runtime docs patching for Twig MDX/`Source` blocks.
 - Panel rendering and source display options.
 
 Sandbox/browser smoke tests should verify:
@@ -27,9 +28,9 @@ Sandbox/browser smoke tests should verify:
 - Copy works.
 - `copy: false` hides the Copy toolbar action.
 - Line numbers render.
-- MDX fenced Twig blocks render through Storybook's native code block UI.
-- `<Source language="twig" />` blocks use the registered Twig grammar.
-- Story navigation does not create duplicate code blocks.
+- MDX fenced Twig blocks are replaced by the addon docs patcher.
+- `<Source language="twig" />` blocks are replaced by the addon docs patcher.
+- Non-Twig fences still use Storybook's default docs code rendering.
 - Toolbar sync icon refreshes the story render.
 - Storybook dev mode loads the sandbox without browser console errors.
 - The injected addon options contain only addon configuration keys.

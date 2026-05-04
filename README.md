@@ -6,7 +6,7 @@
 
 Twig source and code highlighting for [Storybook](https://storybook.js.org/).
 
-`storybook-addon-twig` registers Twig syntax with Storybook's native Docs code blocks and adds a `Twig` panel for story-level source.
+`storybook-addon-twig` adds a `Twig` panel for story-level source and patches Storybook Docs code blocks in the preview runtime so Twig MDX fences and explicit Twig `Source` blocks render through the same Twig highlighter.
 
 ## Install
 
@@ -57,21 +57,31 @@ export const Default = {
 
 ## Options
 
-| Option            | Default | Purpose                                                     |
-| ----------------- | ------- | ----------------------------------------------------------- |
-| `docsCodeBlocks`  | `true`  | Register Twig syntax for Storybook Docs and MDX code blocks |
-| `panel`           | `true`  | Register the dedicated `Twig` addon panel                   |
-| `copy`            | `true`  | Show the `Copy` action in the Twig panel toolbar            |
-| `showLineNumbers` | `true`  | Show line numbers in the Twig panel                         |
-| `wrapLines`       | `true`  | Wrap long lines in the Twig panel                           |
+| Option            | Default | Purpose                                                                |
+| ----------------- | ------- | ---------------------------------------------------------------------- |
+| `docsCodeBlocks`  | `true`  | Enable preview-side Twig docs patching for Twig docs/source blocks      |
+| `panel`           | `true`  | Register the dedicated `Twig` addon panel                              |
+| `copy`            | `true`  | Enable copy actions for addon-owned Twig code surfaces                 |
+| `showLineNumbers` | `true`  | Show line numbers in addon-owned Twig code surfaces                    |
+| `wrapLines`       | `true`  | Wrap long lines in addon-owned Twig code surfaces                      |
 
-The addon uses Storybook's native Docs code blocks for Twig highlighting. The optional manager panel renders story-level Twig source in the addon panel.
+With `docsCodeBlocks: true`, the addon owns Twig rendering for these Docs paths:
+
+- fenced MDX blocks such as ` ```twig ` and ` ```html.twig `
+- explicit `<Source language="twig" />` blocks
+- the optional `Twig` manager panel
 
 ## Behavior Notes
 
 - The `Twig` addon panel and Docs code blocks are independent. You can disable the panel with `panel: false` and keep docs highlighting with `docsCodeBlocks: true`.
-- Storybook's `Source` block inside `Canvas` is rendered in dark mode by Storybook itself. This addon does not force a dark theme.
+- Storybook's `Source` block inside `Canvas` remains Storybook-owned unless you explicitly set a Twig language on the docs/source block.
 - The sync icon in the panel toolbar triggers a Storybook `FORCE_RE_RENDER` refresh for the current story.
+
+## Docs Behavior
+
+Docs highlighting is automatic when the addon is registered and `docsCodeBlocks` is enabled.
+
+The preview runtime watches Storybook's Docs code surfaces and replaces Twig-tagged blocks with addon-owned highlighted output. This is the same category of runtime approach used by addons such as `@lukethacoder/storybook-addon-shiki`, and it avoids relying on Storybook-internal docs component aliasing.
 
 ## Migration Notes
 
