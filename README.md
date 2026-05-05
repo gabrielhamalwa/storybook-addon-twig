@@ -55,6 +55,27 @@ export const Default = {
 > [!TIP]
 > `source` is displayed exactly as provided. Pass formatted Twig when you want the panel and Docs output to preserve project formatting.
 
+Generate source snippets from Twig include metadata:
+
+```ts
+import { buildTwigSourceParameters } from 'storybook-addon-twig/source';
+
+export const Default = {
+  parameters: {
+    twig: buildTwigSourceParameters({
+      template: 'Components/Atoms/Button/button.html.twig',
+      args: {
+        text: 'Save',
+        type: 'primary',
+      },
+    }),
+  },
+};
+```
+
+This only builds the `parameters.twig` source object. Rendering the actual story
+still belongs to your Storybook framework or renderer integration.
+
 ## Options
 
 | Option            | Default | Purpose                                                            |

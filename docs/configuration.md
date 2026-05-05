@@ -17,6 +17,32 @@ export default {
 };
 ```
 
+## Source helpers
+
+The addon ships source-generation helpers from `storybook-addon-twig/source`:
+
+```ts
+import { buildTwigIncludeSource, buildTwigSourceParameters } from 'storybook-addon-twig/source';
+
+const source = buildTwigIncludeSource({
+  template: 'Components/Atoms/Button/button.html.twig',
+  args: { text: 'Save', type: 'primary' },
+});
+
+export const Default = {
+  parameters: {
+    twig: buildTwigSourceParameters({
+      template: 'Components/Atoms/Button/button.html.twig',
+      args: { text: 'Save', type: 'primary' },
+    }),
+  },
+};
+```
+
+These helpers only generate Twig source strings and `parameters.twig` objects.
+They do not render Twig templates. Use your Storybook framework integration for
+story rendering.
+
 ## Addon options
 
 ```ts
