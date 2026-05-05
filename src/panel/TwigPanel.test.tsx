@@ -12,6 +12,31 @@ const openInEditorMock = vi.hoisted(() => vi.fn().mockResolvedValue({}));
 const copyToClipboardMock = vi.hoisted(() => vi.fn().mockResolvedValue(undefined));
 const emitMock = vi.hoisted(() => vi.fn());
 const getChannelMock = vi.hoisted(() => vi.fn(() => ({ emit: emitMock })));
+const lightTheme = vi.hoisted(() => ({
+  appBorderColor: 'hsl(212 50% 30% / 0.15)',
+  appContentBg: '#FFFFFF',
+  barBg: '#FFFFFF',
+  barSelectedColor: '#0063D6',
+  base: 'light',
+  booleanBg: '#ECF2F9',
+  booleanSelectedBg: '#FFFFFF',
+  textColor: '#2E3338',
+  textInverseColor: '#FFFFFF',
+  textMutedColor: '#5C6570',
+}));
+const darkTheme = vi.hoisted(() => ({
+  appBorderColor: '#30363D',
+  appContentBg: '#222325',
+  barBg: '#222325',
+  barSelectedColor: '#479DFF',
+  base: 'dark',
+  booleanBg: '#1B1C1D',
+  booleanSelectedBg: '#292B2E',
+  textColor: '#C9CCCF',
+  textInverseColor: '#1B1C1D',
+  textMutedColor: '#95999D',
+}));
+const useThemeMock = vi.hoisted(() => vi.fn(() => lightTheme));
 
 vi.mock('storybook/manager-api', () => ({
   useParameter: useParameterMock,
@@ -22,6 +47,10 @@ vi.mock('storybook/manager-api', () => ({
   useStorybookApi: () => ({
     openInEditor: openInEditorMock,
   }),
+}));
+
+vi.mock('storybook/theming', () => ({
+  useTheme: useThemeMock,
 }));
 
 vi.mock('storybook/internal/core-events', () => ({
@@ -54,12 +83,19 @@ vi.mock('storybook/internal/components', () => ({
     children,
     onClick,
     ariaLabel,
+    style,
   }: {
     children: React.ReactNode;
     onClick?: () => void;
     ariaLabel?: string | boolean;
+    style?: React.CSSProperties;
   }) => (
-    <button aria-label={typeof ariaLabel === 'string' ? ariaLabel : undefined} onClick={onClick} type="button">
+    <button
+      aria-label={typeof ariaLabel === 'string' ? ariaLabel : undefined}
+      onClick={onClick}
+      style={style}
+      type="button"
+    >
       {children}
     </button>
   ),
@@ -101,6 +137,7 @@ describe('TwigPanel', () => {
     copyToClipboardMock.mockClear();
     openInEditorMock.mockClear();
     emitMock.mockClear();
+    useThemeMock.mockReturnValue(lightTheme);
   });
 
   afterEach(() => {
@@ -149,6 +186,31 @@ describe('TwigPanel', () => {
     expect(container.querySelector('[data-testid="sync-icon"]')).not.toBeNull();
   });
 
+  it('uses Storybook theme colors for dark mode-safe panel controls', async () => {
+    useThemeMock.mockReturnValue(darkTheme);
+    useParameterMock.mockReturnValue({ fileName: 'button.twig', source: '{{ label }}' });
+
+    root.render(<TwigPanel active options={{ showLineNumbers: true, wrapLines: true }} />);
+
+    await vi.waitFor(() => {
+      expect(container.querySelector('[data-testid="viewer"]')).not.toBeNull();
+    });
+
+    const panel = container.querySelector('section') as HTMLElement;
+    const header = container.querySelector('header') as HTMLElement;
+    const lineNumbersOnButton = Array.from(container.querySelectorAll('button')).find(
+      (button) => button.textContent === 'On',
+    ) as HTMLButtonElement;
+    const openInEditorButton = container.querySelector('button[aria-label="Open in editor"]') as HTMLButtonElement;
+
+    expect(panel.style.background).toBe(darkTheme.appContentBg);
+    expect(panel.style.color).toBe(darkTheme.textColor);
+    expect(header.style.borderBottomColor).toBe(darkTheme.appBorderColor);
+    expect(lineNumbersOnButton.style.background).toBe(darkTheme.barSelectedColor);
+    expect(lineNumbersOnButton.style.color).toBe(darkTheme.textInverseColor);
+    expect(openInEditorButton.style.color).toBe(darkTheme.barSelectedColor);
+  });
+
   it('copies source from top Copy button', async () => {
     vi.useFakeTimers();
     useParameterMock.mockReturnValue({ fileName: 'button.twig', source: '{{ label }}' });
@@ -188,7 +250,8 @@ describe('TwigPanel', () => {
       (button) => button.textContent === 'Off',
     );
     const wrapButton = wrapButtons[1];
-    wrapButton?.dispatchEvent(new MouseEvent('click', { bubbles: true }));
+    expect(wrapButton).toBeDefined();
+    wrapButton?.click();
 
     await vi.waitFor(() => {
       expect(container.querySelector('[data-testid="viewer"]')?.textContent).toContain('wrap:false');

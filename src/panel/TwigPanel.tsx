@@ -3,6 +3,8 @@ import { FORCE_RE_RENDER } from 'storybook/internal/core-events';
 import { AddonPanel, Button, EmptyTabContent, Link, Separator } from 'storybook/internal/components';
 import { createCopyToClipboardFunction } from 'storybook/internal/components';
 import { addons, useParameter, useStorybookApi, useStorybookState } from 'storybook/manager-api';
+import { useTheme } from 'storybook/theming';
+import type { Theme } from 'storybook/theming';
 import { SyncIcon } from '@storybook/icons';
 
 import { PARAM_KEY } from '../constants';
@@ -22,6 +24,8 @@ export function TwigPanel({ active, options }: TwigPanelProps): React.ReactEleme
   const parameter = useParameter<TwigSourceParameter | undefined>(PARAM_KEY, undefined);
   const api = useStorybookApi();
   const { storyId } = useStorybookState();
+  const theme = useTheme();
+  const styles = React.useMemo(() => createStyles(theme), [theme]);
   const source = collectTwigSource(parameter);
   const resolvedOptions = React.useMemo(
     () => mergeSourceOptions(normalizeOptions(options), parameter),
@@ -126,12 +130,14 @@ export function TwigPanel({ active, options }: TwigPanelProps): React.ReactEleme
           React.createElement(BooleanSegmentControl, {
             label: 'Line numbers',
             onChange: setShowLineNumbers,
+            styles,
             value: showLineNumbers,
           }),
           React.createElement('span', { 'aria-hidden': true, style: styles.controlDivider }),
           React.createElement(BooleanSegmentControl, {
             label: 'Wrap lines',
             onChange: setWrapLines,
+            styles,
             value: wrapLines,
           }),
           React.createElement(Separator, { force: true }),
@@ -164,10 +170,11 @@ export function TwigPanel({ active, options }: TwigPanelProps): React.ReactEleme
 type BooleanSegmentControlProps = {
   label: string;
   onChange: React.Dispatch<React.SetStateAction<boolean>>;
+  styles: ReturnType<typeof createStyles>;
   value: boolean;
 };
 
-function BooleanSegmentControl({ label, onChange, value }: BooleanSegmentControlProps): React.ReactElement {
+function BooleanSegmentControl({ label, onChange, styles, value }: BooleanSegmentControlProps): React.ReactElement {
   return React.createElement(
     'div',
     { style: styles.segmentGroup },
@@ -201,107 +208,115 @@ function BooleanSegmentControl({ label, onChange, value }: BooleanSegmentControl
   );
 }
 
-const styles = {
-  panel: {
-    display: 'grid',
-    gridTemplateRows: 'auto minmax(0, 1fr)',
-    height: '100%',
-    minHeight: 0,
-  },
-  toolbar: {
-    alignItems: 'center',
-    borderBottom: '1px solid var(--color-border, #d9e2ec)',
-    display: 'flex',
-    gap: 10,
-    justifyContent: 'space-between',
-    minHeight: 44,
-    padding: '6px 10px',
-  },
-  leftControls: {
-    alignItems: 'center',
-    display: 'flex',
-    gap: 8,
-  },
-  segmentControl: {
-    background: 'var(--color-bg, #eef1f5)',
-    border: '1px solid var(--color-border, #d9e2ec)',
-    borderRadius: 999,
-    display: 'flex',
-    gap: 2,
-    padding: 1,
-  },
-  segmentSelectedOnButton: {
-    background: '#2da44e',
-    border: '1px solid #2a9b49',
-    borderRadius: 999,
-    color: '#ffffff',
-    fontSize: 13,
-    fontWeight: 600,
-    height: 22,
-    lineHeight: '18px',
-    minHeight: 22,
-    minWidth: 44,
-    justifyContent: 'center',
-    paddingBlock: 0,
-    paddingInline: 8,
-  },
-  segmentSelectedOffButton: {
-    background: 'var(--color-lightest, #ffffff)',
-    border: '1px solid var(--color-border, #d9e2ec)',
-    borderRadius: 999,
-    color: 'var(--color-default-text, #2e3438)',
-    fontSize: 13,
-    fontWeight: 600,
-    height: 22,
-    lineHeight: '18px',
-    minHeight: 22,
-    minWidth: 44,
-    justifyContent: 'center',
-    paddingBlock: 0,
-    paddingInline: 8,
-  },
-  segmentGroup: {
-    alignItems: 'center',
-    display: 'flex',
-    gap: 10,
-  },
-  controlDivider: {
-    background: 'var(--color-border, #d9e2ec)',
-    height: 18,
-    width: 1,
-  },
-  segmentInactiveButton: {
-    background: 'transparent',
-    border: '1px solid transparent',
-    borderRadius: 999,
-    color: 'var(--color-subtle-text, #7f8ca3)',
-    fontSize: 13,
-    fontWeight: 600,
-    height: 22,
-    lineHeight: '18px',
-    minHeight: 22,
-    minWidth: 44,
-    justifyContent: 'center',
-    paddingBlock: 0,
-    paddingInline: 8,
-  },
-  segmentLabel: {
-    color: 'var(--color-default-text, #2e3438)',
-    fontSize: 13,
-    fontWeight: 600,
-    lineHeight: '20px',
-  },
-  openInEditorButton: {
-    color: 'var(--color-secondary-text, #1f67ff)',
-    fontSize: 13,
-    fontWeight: 700,
-    justifyContent: 'flex-end',
-    lineHeight: '24px',
-    textAlign: 'right',
-    whiteSpace: 'nowrap',
-  },
-  viewer: {
-    minHeight: 0,
-    overflow: 'auto',
-  },
-} satisfies Record<string, React.CSSProperties>;
+function createStyles(theme: Theme): Record<string, React.CSSProperties> {
+  const selectedTextColor = theme.base === 'dark' ? theme.textInverseColor : '#ffffff';
+
+  return {
+    panel: {
+      background: theme.appContentBg,
+      color: theme.textColor,
+      display: 'grid',
+      gridTemplateRows: 'auto minmax(0, 1fr)',
+      height: '100%',
+      minHeight: 0,
+    },
+    toolbar: {
+      alignItems: 'center',
+      background: theme.barBg,
+      borderBottom: `1px solid ${theme.appBorderColor}`,
+      display: 'flex',
+      gap: 10,
+      justifyContent: 'space-between',
+      minHeight: 44,
+      padding: '6px 10px',
+    },
+    leftControls: {
+      alignItems: 'center',
+      display: 'flex',
+      gap: 8,
+    },
+    segmentControl: {
+      background: theme.booleanBg,
+      border: `1px solid ${theme.appBorderColor}`,
+      borderRadius: 999,
+      display: 'flex',
+      gap: 2,
+      padding: 1,
+    },
+    segmentSelectedOnButton: {
+      background: theme.barSelectedColor,
+      border: `1px solid ${theme.barSelectedColor}`,
+      borderRadius: 999,
+      color: selectedTextColor,
+      fontSize: 13,
+      fontWeight: 600,
+      height: 22,
+      lineHeight: '18px',
+      minHeight: 22,
+      minWidth: 44,
+      justifyContent: 'center',
+      paddingBlock: 0,
+      paddingInline: 8,
+    },
+    segmentSelectedOffButton: {
+      background: theme.booleanSelectedBg,
+      border: `1px solid ${theme.appBorderColor}`,
+      borderRadius: 999,
+      color: theme.textColor,
+      fontSize: 13,
+      fontWeight: 600,
+      height: 22,
+      lineHeight: '18px',
+      minHeight: 22,
+      minWidth: 44,
+      justifyContent: 'center',
+      paddingBlock: 0,
+      paddingInline: 8,
+    },
+    segmentGroup: {
+      alignItems: 'center',
+      display: 'flex',
+      gap: 10,
+    },
+    controlDivider: {
+      background: theme.appBorderColor,
+      height: 18,
+      width: 1,
+    },
+    segmentInactiveButton: {
+      background: 'transparent',
+      border: '1px solid transparent',
+      borderRadius: 999,
+      color: theme.textMutedColor,
+      fontSize: 13,
+      fontWeight: 600,
+      height: 22,
+      lineHeight: '18px',
+      minHeight: 22,
+      minWidth: 44,
+      justifyContent: 'center',
+      paddingBlock: 0,
+      paddingInline: 8,
+    },
+    segmentLabel: {
+      color: theme.textColor,
+      fontSize: 13,
+      fontWeight: 600,
+      lineHeight: '20px',
+    },
+    openInEditorButton: {
+      color: theme.barSelectedColor,
+      fontSize: 13,
+      fontWeight: 700,
+      justifyContent: 'flex-end',
+      lineHeight: '24px',
+      textAlign: 'right',
+      whiteSpace: 'nowrap',
+    },
+    viewer: {
+      background: theme.appContentBg,
+      minHeight: 0,
+      overflow: 'auto',
+    },
+  };
+}
